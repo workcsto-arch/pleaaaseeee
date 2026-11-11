@@ -1,0 +1,2289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTU Radio 90.5 — Dark Vintage Varactor Tuner Lab</title>
+<style>
+:root{--ink:#f6efd9;--muted:#b9ad91;--panel:#171814;--line:#39382c;--accent:#f2c14e;--accent2:#d9534f;--good:#62c98b;--bad:#ee8067;--gold:#f2c14e;--soft:#202c27;--pink:#e28b68;--cyan:#6fae9b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#11140f;color:var(--ink);line-height:1.45}
+main{max-width:980px;margin:auto;padding:28px 22px 56px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:18px}
+h1{margin:0;font-size:30px;letter-spacing:-.02em}.sub{color:var(--muted);margin-top:5px}.badge{display:inline-block;padding:5px 9px;border-radius:99px;background:#292817;color:#f2c14e;font-size:11px;font-weight:800;letter-spacing:.05em;border:1px solid #4a4630}
+.progress{margin-top:20px}.progressTop{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px}.bar{height:8px;background:#282534;border-radius:99px;overflow:hidden}.bar>div{height:100%;width:33.33%;background:var(--accent);transition:.2s}
+.game{display:block;margin-top:16px}.card{border:2px solid #3b4a2f;border-radius:18px;padding:20px;background:#181b14;box-shadow:0 8px 0 #090b08}.gameMain{background:#1b1e16}
+.station{font-size:13px;color:var(--muted);font-weight:750;letter-spacing:.05em}.target{font-size:42px;font-weight:900;letter-spacing:-.03em;margin:2px 0 3px}.targetHint{color:var(--muted);font-size:14px}
+.junction{margin:22px 0 14px;height:160px;display:flex;align-items:center;justify-content:center;position:relative}.junction:before{content:'Voltage-controlled junction';position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);letter-spacing:0;text-transform:none;white-space:nowrap;width:max-content;max-width:none}.junction:after{content:'';position:absolute;bottom:2px;width:220px;height:8px;border-radius:50%;background:#6f8d4b22}.side{height:98px;width:125px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.07);position:relative;z-index:1}.p{background:#7b3f3a;border-radius:18px 4px 4px 18px;color:#ffe0c7}.n{background:#355c46;border-radius:4px 18px 18px 4px;color:#d9f2c0}.region{height:98px;width:72px;background:#3b3f2d;border-top:1px dashed #8a856e;border-bottom:1px dashed #8a856e;box-shadow:inset 0 0 18px #f2c14e18;transition:.15s;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}.charge{font-weight:850;text-align:center}.charge small{display:block;font-weight:500;color:var(--muted);font-size:11px}.region .charge{font-size:14px}
+
+.radioFace{position:relative;display:block;background:#6f4d2f;border:3px solid #a86f35;border-radius:14px;padding:24px 18px 14px;margin-bottom:10px;box-shadow:inset 0 -5px 0 #4a3524}.antennaStem{position:absolute;top:-27px;left:50%;width:4px;height:30px;background:#a86f35;transform:rotate(-8deg);transform-origin:bottom;border-radius:2px}.antennaTip{position:absolute;top:-33px;left:calc(50% - 6px);width:12px;height:12px;border-radius:50%;background:#b84d3c;border:2px solid #e9a94f}.dialArea{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:9px;padding:10px 0 4px}.dial{width:132px;height:132px;border-radius:50%;position:relative;flex:0 0 auto;background:#3f4930;border:5px solid #73834d;box-shadow:0 5px 0 #171a12,0 8px 14px #0007;touch-action:none;cursor:grab}.dial:active{cursor:grabbing}.dialTicks{position:absolute;inset:8px;border-radius:50%;background:repeating-conic-gradient(from -135deg,#d2a44d 0deg 2deg,transparent 2deg 15deg);mask:radial-gradient(circle,transparent 0 55%,#000 56% 100%);-webkit-mask:radial-gradient(circle,transparent 0 55%,#000 56% 100%)}.dialPointer{position:absolute;left:50%;top:50%;width:5px;height:49px;border-radius:3px;background:#d04f3f;transform-origin:50% 100%}.dialPointer:after{content:'';position:absolute;top:-7px;left:-5px;width:15px;height:15px;border-radius:50%;background:#d04f3f}.dialCenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#202419;border:2px solid #d2a44d;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#e9c56a}.touchDot{width:32px;height:32px;border-radius:50%;background:#d04f3f;border:4px solid #f0c66a;box-shadow:none;flex:0 0 auto}.dialReadout{min-width:130px}.dialReadout span{display:block;color:var(--muted);font-size:10px;letter-spacing:.08em}.dialReadout strong{display:block;font-size:24px;color:var(--gold)}.dialReadout small{color:var(--muted);font-size:11px}.srOnlyRange{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.radioFace .station{color:var(--gold)}
+label{display:block;margin-top:5px}.sliderRow{display:flex;align-items:center;gap:10px}.sliderRow input{flex:1}input[type=range]{width:100%;accent-color:var(--accent);height:40px}.vrNow{font-weight:900;font-size:18px;min-width:70px;text-align:right}.labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:-2px}
+.readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}.readout{background:#202219;border:1px solid #39382c;border-radius:13px;padding:11px}.readout b{display:block;font-size:18px}.readout span{font-size:11px;color:var(--muted)}
+.freqBox{text-align:center;margin-top:17px;padding:14px;border:2px solid #3b4a2f;border-radius:14px;background:#20251a}.freqBox .small{font-size:12px;color:var(--muted)}.freq{font-size:40px;font-weight:950;letter-spacing:-.03em}.status{font-weight:800;margin-top:2px;min-height:22px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}button{border:0;border-radius:11px;padding:11px 15px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff}button.secondary{background:#2b2738;color:var(--ink)}
+.sidePanel h2{font-size:18px;margin:0 0 8px}.sidePanel p{font-size:14px;color:var(--muted);margin:0 0 15px}.targetCard{background:#20251a;border:1px solid #465437;border-radius:13px;padding:13px;margin-bottom:10px}.targetCard b{display:block}.targetCard span{font-size:12px;color:var(--muted)}
+.section{margin-top:28px}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:12px}.section h2{font-size:23px;margin:0}.sectionLead{color:var(--muted);font-size:14px;margin:3px 0 0}.formulaGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formula{border:1px solid var(--line);border-radius:15px;padding:15px;background:#171914}.formulaTitle{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.04em;text-transform:uppercase}.eq{font-family:Georgia,'Times New Roman',serif;font-size:21px;margin:7px 0 5px;line-height:1.6}.live{color:var(--accent);font-weight:800;white-space:nowrap}.trend{display:inline-flex;align-items:center;justify-content:center;min-width:25px;height:25px;margin-left:5px;border-radius:8px;background:#283521;color:var(--accent);font-family:Inter,system-ui,sans-serif;font-size:18px;font-weight:900;vertical-align:middle}.trend.down{color:var(--pink)}.meaning{font-size:12px;color:var(--muted)}
+.chain{display:none}
+.knowledge{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.knowledge article{padding:14px 12px;border:1px solid #35473f;border-top:4px solid #4f9b73;background:#18211d;border-radius:10px}.knowledge article:nth-child(2){border-top-color:#c9534d;background:#241a19}.knowledge article:nth-child(3){border-top-color:#6eaa62;background:#1a241d}.knowledge h3{font-size:15px;margin:0 0 5px}.knowledge p{font-size:13px;color:var(--muted);margin:0}.note{background:#24271b;border-left:4px solid var(--accent);padding:13px 15px;border-radius:8px;font-size:13px;margin-top:12px}.foot{margin-top:24px;color:var(--muted);font-size:11px;text-align:center}
+#overlay{position:fixed;inset:0;background:rgba(11,10,17,.97);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{max-width:590px;text-align:center}.modal h2{font-size:40px;margin:9px 0}.modal p{color:var(--muted);line-height:1.55}.score{font-size:25px;font-weight:900;margin:14px}
+.missionToast{position:fixed;right:22px;bottom:22px;width:min(390px,calc(100vw - 44px));z-index:8;background:linear-gradient(180deg,#2a2922,#1d1e18);border:1px solid #8f7546;border-left:4px solid var(--accent);border-radius:14px;box-shadow:0 14px 34px #0009,0 0 0 1px #0005;padding:16px;color:var(--ink);animation:missionIn .22s ease-out}.missionToast.hidden{display:none}.missionToast.clickable{cursor:pointer}.missionToast.clickable:hover{transform:translateY(-1px);box-shadow:0 16px 38px #000b,0 0 0 1px #0005}.missionToast .toastTitle{font-family:Georgia,'Times New Roman',serif;font-size:23px;font-weight:800;color:#f3e7c7;margin:0 34px 8px 0}.missionToast .toastBody{font-size:13px;color:#d0c5ad;line-height:1.45}.missionToast .toastHint{font-size:11px;color:#9e967f;margin-top:10px}.missionToast .missionOptions{display:grid;gap:8px;margin-top:12px}.missionToast .missionOption{width:100%;text-align:left;background:#29291f;color:#f0e5c8;border:1px solid #6f6347;border-radius:10px;padding:10px 11px;font:700 12px/1.35 "Trebuchet MS",Arial,sans-serif}.missionToast .missionOption:hover{background:#343226;border-color:#c2964d}.missionToast .missionOption .emoji{font-size:17px;margin-right:5px}.missionToast .missionDone{font-size:12px;color:var(--good);font-weight:800;margin-top:10px}.missionToast .toastTop{position:relative;height:0}.missionToast .radioSpeaker{position:absolute;right:10px;bottom:-52px;display:flex;align-items:center;justify-content:center;color:#e9d9b4;cursor:pointer;z-index:3}.missionToast .radioSpeaker .radioAvatar{font-size:36px;line-height:1;filter:drop-shadow(0 3px 3px #0009)}.missionToast .radioSpeaker:hover .radioAvatar{transform:scale(1.08)}.missionToast .radioSpeaker .radioLabel{display:none}.missionToast:after{content:'';position:absolute;right:18px;bottom:-10px;width:18px;height:18px;background:#1d1e18;border-right:1px solid #8f7546;border-bottom:1px solid #8f7546;transform:rotate(45deg)}.missionToast .missionOptions{position:relative;z-index:1}.missionMini{position:fixed;right:24px;bottom:24px;width:auto;height:auto;z-index:9;border:0;background:transparent;box-shadow:none;display:flex;align-items:center;justify-content:center;font-size:38px;line-height:1;cursor:pointer;touch-action:manipulation;user-select:none;padding:0;transition:filter .15s,transform .15s}.missionMini:hover{filter:drop-shadow(0 4px 8px #0009);transform:scale(1.08)}.missionMini.hidden{display:none}.missionBrief{margin-top:28px}.missionBrief .sidePanel{padding:20px}.missionBrief .note{margin-top:14px}@keyframes missionIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.missionToast{right:14px;bottom:14px;width:calc(100vw - 28px)}}
+@media(max-width:760px){main{padding:18px 14px 42px}.game{grid-template-columns:1fr}.formulaGrid{grid-template-columns:1fr}.knowledge{grid-template-columns:1fr}.chain{grid-template-columns:1fr 1fr}.target{font-size:34px}.side{width:95px}.region{width:58px}}
+
+/* --- 1990s portable radio makeover --- */
+:root{
+ --ink:#252a28;--muted:#68706a;--panel:#e6dfc9;--line:#b7ad91;
+ --accent:#e5a43b;--accent2:#c94e3b;--good:#397c58;--bad:#b74735;
+ --gold:#f1bd59;--soft:#d2c8aa;--pink:#c76d55;--cyan:#6d9a91;
+}
+body{
+ background:
+   radial-gradient(ellipse at 50% 0%,#394653 0,#202a33 48%,#141b22 100%);
+ color:#f3ecd9;
+ font-family:"Trebuchet MS",Arial,sans-serif;
+}
+main{max-width:1060px;padding-top:34px}
+header{border-bottom:1px solid #59636a}
+h1{font-family:Georgia,serif;letter-spacing:.02em;text-shadow:0 2px 0 #0005}
+.sub{color:#c2c5bd}
+.badge{
+ background:#28333a;color:#f5c66b;border:1px solid #718087;
+ border-radius:3px;letter-spacing:.12em;font-family:monospace;
+}
+.progressTop{color:#d1d0c5}
+.bar{height:10px;background:#0e151a;border:1px solid #657078;border-radius:2px}
+.bar>div{background:linear-gradient(90deg,#d17a32,#f5c66b);box-shadow:0 0 8px #e5a43b88}
+.game{gap:20px}
+.card{
+ background:linear-gradient(145deg,#eee8d5,#d6ceb5);
+ color:#252a28;border:3px solid #a59a7d;border-radius:18px;
+ box-shadow:0 8px 0 #090f13,0 14px 28px #0006;
+}
+.gameMain{position:relative;background:linear-gradient(145deg,#e9e2ce,#cfc5a8);padding:22px}
+.gameMain:before{
+ content:"";position:absolute;inset:7px;border:1px solid #fff8;border-radius:11px;
+ pointer-events:none;
+}
+.radioFace{
+ min-height:154px;position:relative;overflow:hidden;
+ background:linear-gradient(180deg,#26343a,#111a20);
+ border:5px solid #8e7952;border-radius:9px;padding:18px 22px 15px;
+ box-shadow:inset 0 0 0 2px #0b1115,inset 0 0 24px #000b,0 3px 0 #9b8a68;
+}
+.radioFace:after{
+ content:"";position:absolute;left:22px;right:22px;bottom:13px;height:3px;
+ background:repeating-linear-gradient(90deg,#d39a43 0 2px,transparent 2px 12px);
+ opacity:.7;
+}
+.radioFace .station{color:#e4b85e;font-family:monospace;letter-spacing:.2em}
+.radioFace .target{
+ color:#f4c76a;font-family:"Courier New",monospace;font-size:clamp(38px,6vw,54px);
+ letter-spacing:.02em;text-shadow:0 0 12px #f4c76a66,0 2px #000;
+ font-variant-numeric:tabular-nums;
+}
+.targetHint{color:#59615a}
+.junction:before{color:#727568;font-family:monospace}
+.side{border:2px solid #b5a987;box-shadow:inset 0 2px 6px #0003}
+.p{background:linear-gradient(135deg,#c66a52,#8e4439);color:#fff0d7}
+.n{background:linear-gradient(135deg,#58836c,#315543);color:#e4f3d7}
+.region{background:#c6b98f;border-color:#8b815f;box-shadow:inset 0 0 18px #fff4}
+.region .charge{color:#33382d}
+.region .charge small{color:#60614f}
+.dialArea{justify-content:flex-start;gap:20px}
+.dial{
+ background:radial-gradient(circle at 35% 28%,#77815a,#3d4934 65%,#20291f);
+ border:7px solid #a18c5d;
+ box-shadow:0 5px 0 #746747,0 8px 14px #0005,inset 0 0 0 2px #20291f;
+}
+.dialTicks{background:repeating-conic-gradient(from -135deg,#f0d28b 0deg 2deg,transparent 2deg 15deg)}
+.dialPointer,.dialPointer:after{background:#d45c45}
+.dialCenter{background:#1d2927;border:2px solid #d9b56b;color:#f2d28b}
+.touchDot{background:#d45c45;border-color:#f1cf7e}
+.dialReadout span{color:#687064}
+.dialReadout strong{color:#374538;font-family:monospace}
+.dialReadout small{color:#74796c}
+label{color:#3c453b}
+input[type=range]{accent-color:#c47b36}
+.readout{
+ background:linear-gradient(180deg,#f5efdf,#d9d0b8);
+ border:1px solid #b9ad8e;border-radius:7px;box-shadow:inset 0 1px #fff;
+}
+.readout b{color:#38483b;font-family:monospace}
+.readout span{color:#707568}
+.freqBox{
+ background:linear-gradient(180deg,#26343a,#111a20);
+ border:3px solid #9b895f;border-radius:8px;color:#f2c76c;
+ box-shadow:inset 0 0 18px #0009;
+}
+.freqBox .small{color:#d0bd8b;font-family:monospace;letter-spacing:.12em}
+.freq{font-family:"Courier New",monospace;color:#f4c76a;text-shadow:0 0 10px #f4c76a55}
+.status{font-family:monospace}
+.actions button,button{
+ background:linear-gradient(180deg,#eab85c,#bd762e);color:#25251d;
+ border:1px solid #94602b;border-radius:5px;
+ box-shadow:0 3px 0 #815323,0 4px 7px #0002;
+ text-transform:uppercase;letter-spacing:.05em;
+}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #815323}
+button.secondary{background:linear-gradient(180deg,#68777a,#3e4c50);color:#f5ecd6;border-color:#303b3d}
+.sidePanel{background:linear-gradient(145deg,#e9e2ce,#d4c9ad)}
+.sidePanel h2,.section h2{font-family:Georgia,serif;color:#29362f}
+.sidePanel p,.targetCard span{color:#687066}
+.targetCard{
+ background:linear-gradient(180deg,#f5efdf,#ddd4bb);
+ border:1px solid #b9ad8e;border-radius:6px;
+ box-shadow:inset 0 1px #fff;
+}
+.targetCard b{color:#354438}
+.note{background:#e9dfc4;border-left:4px solid #c27b36;color:#3d4539}
+.sectionHead{align-items:center}
+.sectionLead{color:#c7c9bf}
+.formulaGrid{gap:12px}
+.formula{
+ background:linear-gradient(145deg,#eee8d5,#d7ceb6);
+ color:#28332d;border:2px solid #a99d7d;border-radius:9px;
+ box-shadow:0 4px 0 #0e151a;
+}
+.formulaTitle,.meaning{color:#6a7064}
+.eq{font-family:Georgia,serif}
+.live{color:#a45d25}
+.trend{background:#d9cfb5;color:#526b4d}
+.trend.down{color:#b34e3b}
+.knowledge article{
+ background:linear-gradient(145deg,#e9e2ce,#d4c9ad);
+ color:#28332d;border:1px solid #a99d7d;border-top:5px solid #63846a;
+ border-radius:7px;box-shadow:0 4px 0 #0e151a;
+}
+.knowledge article:nth-child(2){border-top-color:#c66a52;background:linear-gradient(145deg,#eee1d3,#d9c6b4)}
+.knowledge article:nth-child(3){border-top-color:#8a9b58}
+.knowledge h3{color:#354438}
+.knowledge p{color:#687066}
+.foot{color:#aeb6b2}
+#overlay{background:radial-gradient(ellipse at center,#34434a,#111920)}
+.modal h2{font-family:Georgia,serif;color:#f1c36c}
+.modal p{color:#d4d6cb}
+@media(max-width:760px){
+ .gameMain{padding:16px}
+ .radioFace{padding:16px 14px}
+ .dialArea{gap:12px;flex-wrap:wrap}
+ .dial{width:116px;height:116px}
+}
+
+
+
+/* --- Dark vintage 90s radio finish: smoked plastic, walnut, and amber --- */
+:root{
+  --ink:#eee5d2;
+  --muted:#c0b49b;
+  --panel:#211d18;
+  --line:#66543b;
+  --accent:#d99a42;
+  --accent2:#bd5c3e;
+  --good:#8db58b;
+  --bad:#e18a70;
+  --gold:#f2c56f;
+  --soft:#30291f;
+  --pink:#d88970;
+  --cyan:#8eaaa0;
+}
+body{
+  background:
+    radial-gradient(ellipse at 50% -10%,#303a3c 0,#1a2021 48%,#101414 100%);
+  color:#eee5d2;
+}
+header{border-bottom-color:#5b4b36}
+h1{color:#f0e4c9;text-shadow:0 2px 3px #000}
+.sub{color:#c4b89f}
+.badge{
+  background:#211f1a;color:#efc879;border-color:#776344;
+  box-shadow:inset 0 1px #ffffff12;
+}
+.progressTop{color:#d4c8b0}
+.bar{background:#090d0e;border-color:#66583f}
+.card{
+  background:linear-gradient(145deg,#302a21,#1d1b17);
+  color:#eee5d2;border:2px solid #756044;
+  box-shadow:0 7px 0 #090b0a,0 14px 28px #0008;
+}
+.gameMain{
+  background:linear-gradient(145deg,#302a21,#1d1b17);
+}
+.gameMain:before{border-color:#c7a66a44}
+.radioFace{
+  background:
+    repeating-linear-gradient(0deg,#ffffff05 0 1px,transparent 1px 4px),
+    linear-gradient(145deg,#4a3324 0%,#291f19 48%,#15191a 100%);
+  border-color:#98784a;
+  box-shadow:inset 0 0 0 2px #100f0d,inset 0 0 28px #000d,0 4px 0 #090b0a;
+}
+.radioFace:before{
+  content:"";
+  position:absolute;right:22px;top:19px;width:94px;height:78px;
+  border:1px solid #a887544d;border-radius:5px;
+  background:
+    repeating-linear-gradient(0deg,#c5a16a55 0 2px,transparent 2px 5px),
+    repeating-linear-gradient(90deg,#c5a16a22 0 2px,transparent 2px 5px);
+  opacity:.48;pointer-events:none;
+}
+.radioFace:after{
+  background:repeating-linear-gradient(90deg,#c49a55 0 2px,transparent 2px 12px);
+  opacity:.8;
+}
+.radioFace .station{color:#d8b46e}
+.radioFace .target{
+  color:#ffd27b;
+  text-shadow:0 0 13px #f2bf5b66,0 2px 3px #000;
+}
+.targetHint{color:#d0c3a8}
+.junction:before{color:#c4b79c;white-space:nowrap;width:max-content;max-width:none}
+.side{border-color:#897654}
+.p{background:linear-gradient(135deg,#9f5142,#5b2c27);color:#fff0dc}
+.n{background:linear-gradient(135deg,#52745d,#294536);color:#e8f0d9}
+.region{
+  background:linear-gradient(180deg,#88764f,#4c4531);
+  border-color:#b39a67;
+}
+.region .charge{color:#fff0cf}
+.region .charge small{color:#e0c99a}
+.dial{
+  background:radial-gradient(circle at 35% 28%,#68704d,#303a2c 65%,#151b17);
+  border-color:#a98a52;
+  box-shadow:0 5px 0 #59462e,0 8px 14px #0009,inset 0 0 0 2px #171b14;
+}
+.dialTicks{background:repeating-conic-gradient(from -135deg,#d7b875 0deg 2deg,transparent 2deg 15deg)}
+.dialCenter{background:#171e1b;border-color:#b8995d;color:#f1d18d}
+.touchDot{background:#a94c38;border-color:#d8b56e}
+.dialReadout span,.dialReadout small{color:#c7b99e}
+.dialReadout strong{color:#f0c875}
+label{color:#e8dcc5}
+.readout{
+  background:linear-gradient(180deg,#292720,#1a1b17);
+  border-color:#62543d;box-shadow:inset 0 1px #ffffff0b;
+}
+.readout b{color:#f0d18d}
+.readout span{color:#c7bda7}
+.freqBox{
+  background:linear-gradient(180deg,#172326,#090f12);
+  border-color:#8d754b;color:#f2c76c;
+  box-shadow:inset 0 0 22px #000d,0 2px 0 #0b0d0c;
+}
+.freqBox .small{color:#d4c29d}
+.freq{color:#ffd27b;text-shadow:0 0 12px #f2bf5b66}
+.status{color:#e8d9bb}
+.actions button,button{
+  background:linear-gradient(180deg,#c58b3d,#805326);
+  color:#fff0d3;border-color:#a47a43;
+  box-shadow:0 3px 0 #4e351d,0 4px 7px #0006;
+}
+button:active{box-shadow:0 1px 0 #4e351d}
+button.secondary{background:linear-gradient(180deg,#59615d,#303a38);color:#f1e7d3;border-color:#68736b}
+.sidePanel{
+  background:linear-gradient(145deg,#302a21,#1c1b17);
+}
+.sidePanel h2,.section h2{color:#f0dfbd}
+.sidePanel p,.targetCard span{color:#d0c3aa}
+.targetCard{
+  background:linear-gradient(180deg,#292720,#1b1c18);
+  border-color:#6e5b3d;box-shadow:inset 0 1px #ffffff0a;
+}
+.targetCard b{color:#f1d49b}
+.note{
+  background:#30271c;border-left-color:#d69a45;color:#f0e2c8;
+}
+.sectionLead{color:#d0c4ad}
+.formula{
+  background:linear-gradient(145deg,#2b2922,#191b18);
+  color:#f1e7d4;border-color:#66563c;
+  box-shadow:0 4px 0 #090d0c;
+}
+.formulaTitle,.meaning{color:#d1c4a9}
+.eq{color:#f4ead8}
+.live{color:#f3bd62}
+.trend{background:#34372a;color:#d6e0a8}
+.trend.down{color:#e6a08a}
+.knowledge article{
+  background:linear-gradient(145deg,#292820,#1b1c18);
+  color:#f0e6d3;border-color:#62543b;border-top-color:#8a9d69;
+  box-shadow:0 4px 0 #090d0c;
+}
+.knowledge article:nth-child(2){
+  border-top-color:#bd725b;
+  background:linear-gradient(145deg,#30231f,#1d1917);
+}
+.knowledge article:nth-child(3){
+  border-top-color:#a1a96a;
+  background:linear-gradient(145deg,#292a20,#191d18);
+}
+.knowledge h3{color:#f1d9aa}
+.knowledge p{color:#ded2bd}
+.foot{color:#c2b69f}
+#overlay{background:radial-gradient(ellipse at center,#293334,#0b1011)}
+.modal h2{color:#f2c56f}
+.modal p{color:#e1d5bd}
+@media(max-width:760px){
+  .radioFace:before{right:12px;width:62px;height:58px;opacity:.3}
+}
+
+
+/* Analog frequency scale: the indicator follows the tuning knob */
+.tunerScale{
+  margin:14px auto 0;
+  max-width:440px;
+  padding:9px 12px 7px;
+  border:1px solid #a18452;
+  border-radius:5px;
+  background:linear-gradient(180deg,#111918,#080e10);
+  box-shadow:inset 0 0 14px #000d,0 1px 0 #d7b87533;
+}
+.scaleHeading{
+  display:flex;justify-content:space-between;gap:10px;
+  color:#d7c49a;font:700 9px/1.4 "Courier New",monospace;
+  letter-spacing:.16em;
+}
+#scaleReadout{color:#ffd27b;font-size:12px;letter-spacing:.04em}
+#frequencySlider{
+  display:block;width:100%;height:22px;margin:6px 0 0;
+  accent-color:#e0a94f;cursor:ew-resize;
+  background:transparent;
+}
+#frequencySlider::-webkit-slider-runnable-track{
+  height:4px;border-radius:2px;
+  background:linear-gradient(90deg,#8b6a3c,#e0bc72,#8b6a3c);
+  border:1px solid #5c472e;
+}
+#frequencySlider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:7px;height:19px;margin-top:-8px;border-radius:2px;
+  background:#c94f3e;border:1px solid #f0c77c;
+  box-shadow:0 0 7px #e6a54b88;
+}
+#frequencySlider::-moz-range-track{
+  height:4px;border-radius:2px;background:#b08a50;border:1px solid #5c472e;
+}
+#frequencySlider::-moz-range-thumb{
+  width:7px;height:19px;border-radius:2px;
+  background:#c94f3e;border:1px solid #f0c77c;
+}
+.scaleLabels{
+  display:flex;justify-content:space-between;
+  color:#b9a982;font:9px "Courier New",monospace;
+}
+.dial{touch-action:none;user-select:none;-webkit-user-select:none}
+.dialPointer{pointer-events:none}
+
+
+/* --- Integrated analog radio scale and revised physical control layout --- */
+.radioFace{padding-bottom:42px;overflow:visible}
+.radioFace .target{margin-bottom:8px}
+.radioScale{
+  position:relative;margin:4px 12px 0;padding:5px 5px 0;
+  height:29px;border-top:1px solid #b18a50;
+  background:linear-gradient(180deg,#171a17,#0b1111);
+  border-radius:2px 2px 5px 5px;
+  box-shadow:inset 0 3px 8px #000b;
+}
+.radioScaleTrack{
+  height:13px;position:relative;margin:0 4px;
+  border-bottom:2px solid #c2a16a;
+  background:repeating-linear-gradient(90deg,transparent 0 3.1%,#c5a56d 3.1% 3.35%,transparent 3.35% 6.2%);
+}
+.radioScaleTrack:before{
+  content:"";position:absolute;left:0;right:0;top:0;height:6px;
+  background:repeating-linear-gradient(90deg,#d0b27a 0 1px,transparent 1px 1.1%);
+  opacity:.34;
+}
+.scaleTick{position:absolute;bottom:-2px;width:1px;height:11px;background:#f0d49a;z-index:1}
+.t86{left:0}.t120{left:34%}.t150{left:63.8%}.t186{right:0}
+.frequencyNeedle{
+  position:absolute;z-index:3;left:34%;top:-3px;height:18px;width:2px;
+  background:#d64d3d;box-shadow:0 0 5px #e46d4e;
+  transform:translateX(-50%);
+  transition:left .08s linear;
+}
+.frequencyNeedle:before{
+  content:"";position:absolute;left:-3px;top:-2px;width:8px;height:5px;
+  background:#d64d3d;clip-path:polygon(50% 100%,0 0,100% 0);
+}
+.radioScaleNumbers{
+  display:flex;justify-content:space-between;margin:1px 0 0;
+  color:#d2bc8e;font:9px/1 "Courier New",monospace;letter-spacing:.03em;
+}
+.radioFace:after{display:none}
+.controlBay{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.95fr);
+  align-items:center;gap:16px;margin:12px 0 8px;padding:14px 14px 12px;
+  border:1px solid #66543b;border-radius:8px;
+  background:linear-gradient(145deg,#211f19,#141917);
+  box-shadow:inset 0 1px #ffffff0a,0 3px 0 #090d0c;
+}
+.controlBay .junction{margin:0;min-width:0}
+.knobPanel{min-width:0;display:flex;flex-direction:column;align-items:center}
+.knobPanel .dialArea{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  width:100%;margin:0;padding:4px 0 0;
+}
+.dialReadout{
+  order:0;min-width:92px;max-width:112px;text-align:right;
+  flex:1 1 90px;
+}
+.dialReadout span{
+  display:block;color:#d5c39f;font:700 9px/1.4 "Courier New",monospace;
+  letter-spacing:.1em;
+}
+.dialReadout strong{
+  display:block;color:#f2c56f;font:700 23px/1.2 "Courier New",monospace;
+  white-space:nowrap;text-shadow:0 0 8px #f2bf5b33;
+}
+.dialReadout small{display:block;color:#bbae93;font-size:10px;line-height:1.3}
+.dialAssembly{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  flex:0 0 auto;padding:12px 18px;
+}
+.dial{
+  width:176px;height:176px;border-radius:50%;position:relative;flex:0 0 auto;
+  border:0;outline:0;
+  background:
+    radial-gradient(circle at 36% 29%,#60604b 0,#34382d 35%,#222820 69%,#111713 100%);
+  box-shadow:inset 0 3px 7px #ffffff20,inset 0 -9px 14px #000c,0 8px 13px #0009;
+  touch-action:none;cursor:grab;
+}
+.dial:active{cursor:grabbing}
+.dial:before{
+  content:"";position:absolute;inset:8px;border-radius:50%;
+  background:repeating-conic-gradient(from -135deg,
+    #d5bd82 0deg 1deg,transparent 1deg 5deg,
+    #8c7956 5deg 5.5deg,transparent 5.5deg 10deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 77%,#000 78% 100%);
+  mask:radial-gradient(circle,transparent 0 77%,#000 78% 100%);
+  opacity:.9;pointer-events:none;
+}
+.dial:after{
+  content:"";position:absolute;inset:20px;border-radius:50%;
+  border:1px solid #a58d5e55;box-shadow:inset 0 1px 4px #0008;
+  pointer-events:none;
+}
+.dialTicks{
+  position:absolute;inset:0;border-radius:50%;
+  background:repeating-conic-gradient(from -135deg,
+    transparent 0deg 9deg,#d5bd82 9deg 10deg,transparent 10deg 18deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 88%,#000 89% 100%);
+  mask:radial-gradient(circle,transparent 0 88%,#000 89% 100%);
+}
+.dialPointer{
+  position:absolute;left:50%;top:50%;width:4px;height:68px;border-radius:3px;
+  background:#d64f3d;transform-origin:50% 100%;
+  box-shadow:0 0 5px #d64f3d66;z-index:2;
+}
+.dialPointer:after{display:none}
+.dialCenter{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:58px;height:58px;border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,#44483a,#1c221d 72%);
+  border:1px solid #b69b62;
+  box-shadow:inset 0 2px 4px #ffffff1c,inset 0 -3px 7px #000b,0 2px 4px #0009;
+  display:flex;align-items:center;justify-content:center;
+  color:#f0d18d;font:bold 13px "Courier New",monospace;
+  z-index:3;
+}
+.dialEnd{
+  position:absolute;top:50%;transform:translateY(-50%);
+  color:#d2bc8e;font:700 9px "Courier New",monospace;letter-spacing:.08em;
+}
+.dialMin{left:-1px}.dialMax{right:-4px}
+.knobCaption{
+  margin-top:8px;color:#bbae93;font:700 9px "Courier New",monospace;
+  letter-spacing:.16em;text-align:center;
+}
+#frequencySlider{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
+/* Volume knob: same vintage physical style as the V_R tuning knob, placed in the
+   open area on the left. It controls the complete radio audio bus. */
+.controlBay{position:relative}
+.volumeControl{position:absolute;left:34px;top:52px;width:158px;height:158px;z-index:5}
+.volumeKnobAssembly{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.volumeKnob{width:148px;height:148px;border-radius:50%;position:relative;outline:0;
+  background:radial-gradient(circle at 36% 29%,#60604b 0,#34382d 35%,#222820 69%,#111713 100%);
+  box-shadow:inset 0 3px 7px #ffffff20,inset 0 -9px 14px #000c,0 8px 13px #0009;
+  touch-action:none;cursor:grab;transition:opacity .15s ease}
+.volumeKnob:active{cursor:grabbing}
+.volumeKnob.disabled{opacity:.38;filter:saturate(.65)}
+.volumeKnob:before{content:"";position:absolute;inset:8px;border-radius:50%;
+  background:repeating-conic-gradient(from -135deg,#d5bd82 0deg 1deg,transparent 1deg 5deg,#8c7956 5deg 5.5deg,transparent 5.5deg 10deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 77%,#000 78% 100%);mask:radial-gradient(circle,transparent 0 77%,#000 78% 100%);opacity:.9;pointer-events:none}
+.volumeKnob:after{content:"";position:absolute;inset:17px;border-radius:50%;border:1px solid #a58d5e55;box-shadow:inset 0 1px 4px #0008;pointer-events:none}
+.volumeKnobTicks{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from -135deg,transparent 0deg 9deg,#d5bd82 9deg 10deg,transparent 10deg 18deg);-webkit-mask:radial-gradient(circle,transparent 0 88%,#000 89% 100%);mask:radial-gradient(circle,transparent 0 88%,#000 89% 100%)}
+.volumeKnobPointer{position:absolute;left:50%;top:50%;width:4px;height:57px;border-radius:3px;background:#d64f3d;transform-origin:50% 100%;box-shadow:0 0 5px #d64f3d66;z-index:2;pointer-events:none}
+.volumeKnobCenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#44483a,#1c221d 72%);border:1px solid #b69b62;box-shadow:inset 0 2px 4px #ffffff1c,inset 0 -3px 7px #000b,0 2px 4px #0009;display:flex;align-items:center;justify-content:center;font-size:20px;z-index:3;user-select:none}
+.volumeLabel{position:absolute;left:0;right:0;bottom:-17px;text-align:center;color:#c4b28b;font:700 9px "Courier New",monospace;letter-spacing:.18em}
+@media(max-width:760px){
+  .volumeControl{position:relative;left:auto;top:auto;width:138px;height:138px;margin:0 auto 2px}
+  .volumeKnob{width:128px;height:128px}
+  .volumeKnobPointer{height:49px}
+}
+@media(max-width:420px){
+  .volumeControl{width:120px;height:120px}
+  .volumeKnob{width:110px;height:110px}
+  .volumeKnobPointer{height:42px}
+  .volumeKnobCenter{width:43px;height:43px;font-size:18px}
+}
+@media(max-width:760px){
+  .controlBay{grid-template-columns:1fr;gap:20px}
+  .controlBay .junction{max-width:100%;margin:auto}
+  .knobPanel .dialArea{gap:8px}
+  .dial{width:158px;height:158px}
+  .dialPointer{height:60px}
+  .dialReadout{min-width:85px;max-width:105px}
+  .dialReadout strong{font-size:19px}
+}
+@media(max-width:420px){
+  .dial{width:138px;height:138px}
+  .dialPointer{height:51px}
+  .dialAssembly{padding:10px 14px}
+  .dialCenter{width:50px;height:50px}
+  .dialReadout span{font-size:8px}
+  .dialReadout strong{font-size:17px}
+}
+
+
+/* Final layout pass: open-face radio controls, right-aligned tuning knob */
+.controlBay{
+  display:flex;flex-direction:column;align-items:stretch;
+  gap:4px;margin:10px 0 8px;padding:0;
+  border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+.knobRow{
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:205px;width:100%;gap:18px;
+}
+.knobRow .dialReadout{
+  order:0;flex:0 0 auto;min-width:145px;max-width:190px;
+  text-align:center;margin:0 0 0 4px;align-self:center;
+}
+.knobRow .dialReadout span{font-size:10px;letter-spacing:.13em}
+.knobRow .dialReadout strong{font-size:24px}
+.knobRow .dialReadout small{margin-top:5px;font-size:10px}
+.knobPanel{
+  display:flex;align-items:center;justify-content:flex-end;
+  flex:1 1 auto;min-width:0;margin:0;
+}
+.dialAssembly{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  flex:0 0 auto;padding:12px 0;margin-right:0;
+}
+.dial{
+  width:190px;height:190px;
+}
+.dialPointer{height:75px}
+.dialCenter{width:62px;height:62px}
+.dialEnd{
+  position:absolute;top:auto;transform:none;
+  font:700 10px "Courier New",monospace;letter-spacing:.12em;
+  color:#e2c98e;text-shadow:0 1px 3px #000;
+}
+.dialMin{
+  left:17px;top:19px;
+}
+.dialMax{
+  left:17px;bottom:19px;
+}
+.knobCaption{
+  margin:1px 0 7px;text-align:center;
+  color:#c4b28b;font-size:9px;letter-spacing:.18em;
+}
+.controlBay .junction{
+  width:min(100%,430px);margin:0 auto;
+  min-width:0;
+}
+.controlBay .junction .side,
+.controlBay .junction .region{min-height:94px}
+.radioScale{
+  margin:8px -4px -23px;
+  padding:5px 8px 4px;
+  width:calc(100% + 8px);
+  height:33px;
+  border:0;border-top:1px solid #a88753;
+  border-radius:0 0 3px 3px;
+  background:linear-gradient(180deg,#101614,#080d0e);
+  box-shadow:inset 0 4px 8px #000b;
+}
+.radioScaleTrack{margin:0 3px;height:14px}
+.radioScaleNumbers{padding:0 3px}
+.radioFace{padding-bottom:30px;overflow:hidden}
+.radioFace .targetHint{margin-bottom:0}
+@media(max-width:760px){
+  .knobRow{min-height:175px;gap:10px}
+  .knobRow .dialReadout{min-width:115px;max-width:140px}
+  .knobRow .dialReadout strong{font-size:20px}
+  .dial{width:164px;height:164px}
+  .dialPointer{height:64px}
+  .dialCenter{width:56px;height:56px}
+  .dialMin{left:14px;top:17px}
+  .dialMax{left:14px;bottom:17px}
+}
+@media(max-width:430px){
+  .knobRow{min-height:148px;gap:4px}
+  .knobRow .dialReadout{min-width:100px;max-width:112px;margin-left:0}
+  .knobRow .dialReadout span{font-size:8px}
+  .knobRow .dialReadout strong{font-size:17px}
+  .knobRow .dialReadout small{font-size:9px}
+  .dial{width:138px;height:138px}
+  .dialPointer{height:53px}
+  .dialCenter{width:49px;height:49px;font-size:12px}
+  .dialAssembly{padding:10px 0}
+  .dialMin{left:11px;top:15px;font-size:8px}
+  .dialMax{left:11px;bottom:15px;font-size:8px}
+  .controlBay .junction .side,.controlBay .junction .region{min-height:80px}
+}
+
+
+.dialTicks{
+  inset:0;
+  background:repeating-conic-gradient(from -135deg,
+    transparent 0deg 8deg,#e0bd70 8deg 9deg,transparent 9deg 18deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 82%,#000 83% 100%);
+  mask:radial-gradient(circle,transparent 0 82%,#000 83% 100%);
+  opacity:.95;
+}
+.dial:before{display:none}
+.dial:after{
+  inset:7px;border:1px solid #a58d5e66;
+}
+
+
+/* --- Vintage radio knob: side graduations and small index dots --- */
+.knobRow{
+  justify-content:space-between;
+  width:100%;
+}
+.knobRow .dialReadout{
+  margin-right:auto;
+  text-align:left;
+}
+.knobPanel{
+  margin-left:auto;
+  justify-content:flex-end;
+  align-items:center;
+}
+.dialAssembly{
+  position:relative;
+  width:232px;height:232px;
+  padding:0;margin:0 0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+}
+/* Fine radial reference lines around the outside of the knob */
+.dialAssembly:before{
+  content:"";
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    repeating-conic-gradient(from -135deg,
+      transparent 0deg 4.5deg,
+      #c5a46a 4.5deg 5.3deg,
+      transparent 5.3deg 9deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 82%,#000 83% 87%,transparent 88%);
+  mask:radial-gradient(circle,transparent 0 82%,#000 83% 87%,transparent 88%);
+  opacity:.92;
+  pointer-events:none;
+}
+/* Small brass dots at the major voltage reference positions */
+.dialAssembly:after{
+  content:"";
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 2.5%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 97.5% 50%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 50% 97.5%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 2.5% 50%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 16.4% 16.4%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 83.6% 16.4%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 83.6% 83.6%,#e4c98d 0 2px,transparent 2.8px),
+    radial-gradient(circle at 16.4% 83.6%,#e4c98d 0 2px,transparent 2.8px);
+  pointer-events:none;
+}
+.dial{
+  width:190px;height:190px;
+  flex:0 0 auto;
+  border:0!important;outline:0;
+  box-shadow:
+    inset 0 3px 7px #ffffff20,
+    inset 0 -9px 14px #000c,
+    0 8px 13px #0009;
+}
+/* Preserve the fine reference lines on the face, like the supplied knob photo */
+.dialTicks{
+  inset:0;
+  border-radius:50%;
+  background:repeating-conic-gradient(from -135deg,
+    transparent 0deg 8deg,
+    #e0bd70 8deg 9deg,
+    transparent 9deg 18deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 76%,#000 77% 100%);
+  mask:radial-gradient(circle,transparent 0 76%,#000 77% 100%);
+  opacity:.95;
+}
+.dial:before{display:none}
+.dial:after{
+  inset:7px;border:1px solid #a58d5e66;
+}
+.dialPointer{z-index:3}
+.dialCenter{z-index:4}
+.dialEnd{display:none!important}
+.knobCaption{display:none!important}
+@media(max-width:760px){
+  .knobRow{gap:8px}
+  .dialAssembly{width:204px;height:204px}
+  .dial{width:164px;height:164px}
+}
+@media(max-width:430px){
+  .dialAssembly{width:176px;height:176px}
+  .dial{width:138px;height:138px}
+}
+
+
+/* Control-voltage readout: visually centered and easier to read */
+.knobPanel .dialArea{
+  justify-content:center;
+  gap:24px;
+}
+.knobPanel .dialReadout{
+  flex:0 0 150px;
+  max-width:150px;
+  min-width:150px;
+  text-align:center;
+  align-self:center;
+  margin:0;
+  transform:translateY(2px);
+}
+.knobPanel .dialReadout span{
+  font-size:11px;
+  letter-spacing:.13em;
+  line-height:1.5;
+}
+.knobPanel .dialReadout strong{
+  font-size:30px;
+  line-height:1.25;
+}
+.knobPanel .dialReadout small{
+  font-size:11px;
+  margin-top:3px;
+}
+@media(max-width:760px){
+  .knobPanel .dialArea{gap:14px}
+  .knobPanel .dialReadout{
+    flex-basis:130px;min-width:130px;max-width:130px;
+  }
+  .knobPanel .dialReadout strong{font-size:26px}
+}
+@media(max-width:430px){
+  .knobPanel .dialArea{gap:8px}
+  .knobPanel .dialReadout{
+    flex-basis:112px;min-width:112px;max-width:112px;
+  }
+  .knobPanel .dialReadout span{font-size:9px}
+  .knobPanel .dialReadout strong{font-size:22px}
+}
+
+
+/* Reposition the control-voltage readout into the open center-left space.
+   The tuning knob remains anchored at the far right. */
+.knobRow{
+  position:relative;
+}
+.knobRow > .dialReadout{
+  position:absolute;
+  left:37%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:190px;
+  min-width:190px;
+  max-width:190px;
+  margin:0;
+  padding:0;
+  text-align:center;
+  z-index:2;
+}
+.knobRow > .dialReadout span{
+  font-size:12px;
+  letter-spacing:.16em;
+}
+.knobRow > .dialReadout strong{
+  font-size:32px;
+  line-height:1.25;
+}
+.knobRow > .dialReadout small{
+  display:block;
+  margin-top:5px;
+  font-size:11px;
+}
+.knobPanel{
+  margin-left:auto;
+  flex:0 0 auto;
+}
+@media(max-width:760px){
+  .knobRow > .dialReadout{
+    left:31%;
+    width:150px;min-width:150px;max-width:150px;
+  }
+  .knobRow > .dialReadout span{font-size:10px}
+  .knobRow > .dialReadout strong{font-size:25px}
+}
+@media(max-width:520px){
+  .knobRow{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:8px;
+  }
+  .knobRow > .dialReadout{
+    position:static;
+    transform:none;
+    width:auto;min-width:0;max-width:none;
+    text-align:center;
+    justify-self:center;
+  }
+  .knobPanel{justify-self:end}
+  .knobRow > .dialReadout strong{font-size:21px}
+}
+
+
+/* Larger, clearer control-voltage typography */
+.knobRow > .dialReadout span{
+  font-size:14px;
+  letter-spacing:.14em;
+  line-height:1.5;
+}
+.knobRow > .dialReadout strong{
+  font-size:40px;
+  line-height:1.2;
+}
+.knobRow > .dialReadout small{
+  font-size:13px;
+  margin-top:7px;
+}
+@media(max-width:760px){
+  .knobRow > .dialReadout span{font-size:12px}
+  .knobRow > .dialReadout strong{font-size:32px}
+  .knobRow > .dialReadout small{font-size:12px}
+}
+@media(max-width:520px){
+  .knobRow > .dialReadout span{font-size:10px}
+  .knobRow > .dialReadout strong{font-size:25px}
+  .knobRow > .dialReadout small{font-size:11px}
+}
+
+
+/* P–W–N diagram: fixed overall length, variable depletion width */
+.controlBay .junction{
+  width:min(100%,322px);
+  min-width:0;
+  height:160px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:nowrap;
+  box-sizing:border-box;
+}
+.controlBay .junction .side{
+  flex:1 1 0;
+  width:auto;
+  min-width:0;
+  height:98px;
+  box-sizing:border-box;
+}
+.controlBay .junction .region{
+  flex:0 0 auto;
+  width:72px;
+  min-width:55px;
+  max-width:180px;
+  height:98px;
+  box-sizing:border-box;
+  transition:width .18s ease;
+}
+
+
+/* Keep the Voltage-Controlled Junction caption on one line */
+.knobCaption{
+  white-space:nowrap;
+  width:max-content;
+  max-width:none;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-align:center;
+}
+
+
+/* ===== FIRST PAGE: PN JUNCTION + RESONANCE EXPLORER ===== */
+.labIntroPage{min-height:100vh;padding:34px 22px 0;max-width:1060px;margin:0 auto}
+.pnHero{padding:0 0 22px}.pnHero .badge{margin-bottom:10px}.pnHero h2{font-family:Georgia,serif;font-size:34px;margin:4px 0 6px;color:#f2e7cf}.pnHero p{color:#c4b89f;margin:0;max-width:760px}
+.pnGrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:16px;align-items:stretch}
+.pnCard{background:linear-gradient(145deg,#302a21,#1d1b17);border:2px solid #756044;border-radius:16px;box-shadow:0 7px 0 #090b0a,0 14px 28px #0008;padding:18px;position:relative;overflow:hidden}
+.pnCard h3{font-family:Georgia,serif;color:#f1d79f;margin:0 0 5px;font-size:20px}.pnCard .lead{color:#bfb49d;font-size:12px;margin:0 0 14px}
+.pnControls{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;background:#151818;border:1px solid #5e503b;border-radius:10px;margin-bottom:14px}
+.pnToggle{display:flex;align-items:center;gap:10px;font-weight:800;color:#e8dcc4;font-size:13px}.pnToggle small{display:block;color:#9f967f;font-weight:500;font-size:10px}
+.pnSwitch{position:relative;width:48px;height:26px;flex:0 0 auto}.pnSwitch input{opacity:0;width:0;height:0}.pnSwitch .track{position:absolute;inset:0;background:#4a4740;border:1px solid #76684e;border-radius:99px;cursor:pointer;transition:.2s}.pnSwitch .track:before{content:"";position:absolute;width:20px;height:20px;left:2px;top:2px;background:#b5ab96;border-radius:50%;box-shadow:0 2px 4px #0008;transition:.2s}.pnSwitch input:checked+.track{background:#3f7f62;border-color:#78b58c;box-shadow:0 0 12px #4d9c7255}.pnSwitch input:checked+.track:before{transform:translateX(22px);background:#e9f0d7}
+.pnVoltage{margin-bottom:13px}.pnVoltageTop{display:flex;justify-content:space-between;align-items:baseline;color:#c9bda4;font-size:11px}.pnVoltageTop strong{font:800 20px "Courier New",monospace;color:#f2c56f}.pnVoltage input{width:100%;margin:5px 0 0;accent-color:#d99a42}.pnVoltage input:disabled{opacity:.35}.pnScale{display:flex;justify-content:space-between;color:#887e6a;font-size:9px;margin-top:-3px}
+.pnDiagram{height:270px;border:1px solid #554936;border-radius:12px;background:radial-gradient(circle at 50% 50%,#27251e,#151716 70%);position:relative;overflow:hidden}.pnDiagram:before{content:"REVERSE-BIAS JUNCTION";position:absolute;top:11px;left:14px;color:#8f846d;font:10px "Courier New",monospace;letter-spacing:.12em}.pnBoundary{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);height:168px;width:clamp(90px,18%,170px);background:linear-gradient(90deg,#6b6d69cc,#8a8d88bb,#5e625fbb);border-left:1px solid #a9aaa0;border-right:1px solid #a9aaa0;box-shadow:0 0 26px #c8c8bd22;transition:width .25s ease}.pnSide{position:absolute;top:50%;transform:translateY(-50%);height:168px;width:36%;display:flex;align-items:center;justify-content:center}.pnSide.pSide{left:0;background:linear-gradient(90deg,#5e241dcc,#8f3d2c22)}.pnSide.nSide{right:0;background:linear-gradient(270deg,#1b5e79cc,#12627c22)}.pnLabel{position:absolute;top:17px;font:900 15px Georgia,serif}.pSide .pnLabel{color:#ff9d64}.nSide .pnLabel{color:#53dcff}.pnChargeInfo{position:absolute;bottom:15px;font-size:10px;color:#b6aa93}.pnParticle{position:absolute;width:9px;height:9px;border-radius:50%;transition:left .5s ease,top .5s ease,opacity .3s ease,transform .5s ease;z-index:3}.pnParticle.electron{background:#27dfff;box-shadow:0 0 7px #16dfff,0 0 16px #0dbbff88}.pnParticle.hole{background:transparent;border:2px solid #ff7048;box-sizing:border-box;box-shadow:0 0 7px #ff7048,0 0 16px #ff704855}.pnParticle.hole.hollow{background:transparent;border:2px solid #ff7048}.pnIon{position:absolute;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 11px Arial;color:#bfc1b9;background:#54575299;border:1px solid #85877f;opacity:.9;transition:left .25s ease}.pnIon.neg{color:#c5e5e8}.pnLegend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:#9f967f}.pnLegend span{display:flex;align-items:center;gap:5px}.pnDot{width:8px;height:8px;border-radius:50%;display:inline-block}.pnDot.e{background:#27dfff;box-shadow:0 0 7px #16dfff}.pnDot.h{background:#ff7048}.pnDot.i{background:#6c6f69}
+.pnInfo{margin-top:14px;background:#28231c;border:1px solid #6c5838;border-left:4px solid #d99a42;border-radius:9px;padding:12px 13px;color:#cfc4ad;font-size:12px;line-height:1.5}.pnInfo b{color:#f0d39a}.pnFormula{font-family:Georgia,serif;color:#f0d39a;font-size:15px;margin-top:6px}
+.pnGraphCard{min-height:100%;display:flex;flex-direction:column}.pnGraphWrap{position:relative;flex:1;min-height:300px;border:1px solid #554936;border-radius:11px;background:#141716;overflow:hidden}.pnGraph{width:100%;height:100%;display:block}.pnGraphReadout{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font:11px "Courier New",monospace;color:#bdb39d}.pnGraphReadout strong{color:#f2c56f}.pnBreakdown{margin-top:10px;padding:9px 11px;border:1px solid #69493d;border-left:4px solid #c95442;border-radius:8px;background:#2a1d19;color:#d8b7a9;font-size:11px;display:none}.pnBreakdown.active{display:block;animation:pnPulse 1.1s infinite alternate}.pnBreakdown b{color:#ff8d73}@keyframes pnPulse{to{box-shadow:0 0 18px #c94e3b33}}
+.pnPageNote{margin:16px 0 0;color:#8e8777;font-size:10px;text-align:center}
+@media(max-width:820px){.pnGrid{grid-template-columns:1fr}.pnGraphCard{min-height:400px}.pnDiagram{height:250px}}
+@media(max-width:520px){.labIntroPage{padding:24px 14px 42px}.pnHero h2{font-size:28px}.pnControls{align-items:flex-start;flex-direction:column}.pnDiagram{height:225px}.pnSide,.pnBoundary{height:140px}.pnGraphWrap{min-height:270px}}
+
+
+.sharedLearning{max-width:980px;margin:0 auto;padding:0 22px 56px}
+@media(max-width:760px){.sharedLearning{padding-left:14px;padding-right:14px}}
+
+/* --- Two-page lab navigation --- */
+html,body{overflow-x:hidden}
+#labViewport{width:100vw;overflow:hidden;touch-action:pan-y}
+#labTrack{display:flex;align-items:flex-start;width:200vw;transition:transform .62s cubic-bezier(.2,.8,.2,1),height .62s cubic-bezier(.2,.8,.2,1);will-change:transform,height}
+#labTrack > #pnLabPage,#labTrack > main{flex:0 0 100vw;width:100vw;max-width:none;margin:0;box-sizing:border-box}
+#labTrack > main{padding-left:0;padding-right:0}
+#labTrack > main > header,
+#labTrack > main > .game,
+#labTrack > main > .missionBrief,
+#labTrack > main > .section,
+#labTrack > main > .foot,
+#labTrack > main > .pageNav{width:min(1060px,calc(100vw - 44px));max-width:1060px;margin-left:auto;margin-right:auto}
+#labTrack > main > .section{margin-top:28px}
+#labTrack > main > .foot{margin-top:24px}
+
+.pageNav{display:flex;align-items:center;justify-content:center;margin:18px auto 0;padding:8px 0 0}
+.liftDial{position:relative;width:460px;height:288px;max-width:82vw;isolation:isolate}
+.liftDialFace{display:block;width:100%;height:100%;overflow:visible}
+.liftOuter{fill:#29251e;stroke:#a77a35;stroke-width:3}
+.liftInner{fill:#e9dfc4;stroke:#6d5632;stroke-width:2}
+.liftRim{fill:none;stroke:#d6a34b;stroke-width:2}
+.liftTicks path{fill:none;stroke:#59472b;stroke-width:2.3;stroke-linecap:round}
+.liftDots circle{fill:#9a753c;stroke:#f0d18b;stroke-width:1}
+.liftNeedle{pointer-events:none}.liftNeedleArm{transition:transform .72s cubic-bezier(.2,.8,.2,1)}.liftNeedleLine{fill:none;stroke:#352b20;stroke-width:4;stroke-linecap:round}.liftNeedleShadow{fill:none;stroke:#6c421d;stroke-width:7;stroke-linecap:round;transform:translateY(2px)}
+
+.liftHub{fill:#bd8739;stroke:#62451f;stroke-width:2}
+.liftHubHighlight{fill:#f1d08a}
+.liftStop{position:absolute;top:39px;width:38px;height:34px;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;color:#f0dfb7!important;font-family:Georgia,serif!important;font-size:21px!important;font-weight:700!important;line-height:1!important;letter-spacing:0!important;text-shadow:0 1px 2px #17130e;cursor:pointer}
+.liftStop1{left:27px}.liftStop2{right:24px}
+.liftStop[aria-current="page"]{color:#f4bd5a!important;text-shadow:0 0 9px #e5a43b99,0 1px 2px #17130e}
+@media(max-width:760px){#labTrack > main{padding-left:14px;padding-right:14px}.pageNav{margin-top:10px}.liftDial{width:360px;height:225px;max-width:94vw}}
+/* Gentle carrier motion: JS continues to control their positions while these keyframes add continuous floating. */
+.pnParticle{animation:pnCarrierFloat 2.8s ease-in-out infinite alternate;animation-delay:var(--pn-delay,0ms)}
+@keyframes pnCarrierFloat{0%{transform:translate(-50%,-50%) translate3d(0,0,0)}35%{transform:translate(-50%,-50%) translate3d(4px,-5px,0)}70%{transform:translate(-50%,-50%) translate3d(-3px,4px,0)}100%{transform:translate(-50%,-50%) translate3d(2px,-2px,0)}}
+
+
+/* Radio character: sit outside the speech bubble instead of inside it */
+.missionToast .radioSpeaker{
+  left:-48px;
+  right:auto;
+  bottom:-8px;
+}
+.missionToast:after{
+  left:18px;
+  right:auto;
+}
+@media(max-width:760px){
+  .missionToast .radioSpeaker{
+    left:8px;
+    right:auto;
+    bottom:-42px;
+  }
+}
+
+/* --- Visual cleanup requested --- */
+.controlBay{position:relative;}
+.controlBay .dialReadout{
+  position:absolute;
+  left:50%;
+  top:58px;
+  transform:translateX(-50%);
+  width:max-content;
+  min-width:0;
+  max-width:none;
+  text-align:center;
+  z-index:2;
+  pointer-events:none;
+}
+.controlBay .dialReadout span{display:block;text-align:center;font-size:19px!important;}
+.controlBay .dialReadout strong{display:block;text-align:center;font-size:45px!important;}
+.controlBay .dialReadout small{display:block;text-align:center;font-size:18px!important;}
+.pnBreakdown.active{animation:none;}
+/* Place the page-navigation labels on the inner dial positions shown in the reference. */
+.liftStop{
+  top:56px!important;
+  width:42px!important;
+  height:38px!important;
+  font-size:22px!important;
+  color:#b98b49!important;
+  text-shadow:0 1px 2px #17130e!important;
+}
+.liftStop1{left:50px!important;}
+.liftStop2{right:58px!important;}
+.liftStop[aria-current="page"]{
+  color:#d1a252!important;
+  text-shadow:0 0 8px #b9823a66,0 1px 2px #17130e!important;
+}
+
+/* =========================================================
+   PORTRAIT PHONE LAYOUT
+   Presentation-only overrides. No markup, event handlers,
+   calculations, audio, or simulation functions are changed.
+   ========================================================= */
+@media screen and (max-width: 600px) {
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
+  #labViewport { width:100%; overflow:hidden; }
+  #labTrack { width:200vw; }
+  #labTrack > #pnLabPage,
+  #labTrack > main { width:100vw; flex-basis:100vw; }
+  .labIntroPage { min-height:0; padding:22px 12px 28px; }
+  .pnHero { padding-bottom:16px; }
+  .pnHero h2 { font-size:clamp(25px,7vw,31px); line-height:1.13; }
+  .pnHero p { font-size:13px; line-height:1.5; }
+  .pnGrid { grid-template-columns:minmax(0,1fr); gap:12px; }
+  .pnCard { min-width:0; padding:13px; border-radius:13px; }
+  .pnCard h3 { font-size:17px; line-height:1.25; }
+  .pnCard .lead { font-size:11px; margin-bottom:10px; }
+  .pnControls {
+    flex-direction:row; align-items:center; justify-content:space-between;
+    gap:8px; padding:9px 10px; margin-bottom:11px;
+  }
+  .pnToggle { font-size:12px; gap:7px; min-width:0; }
+  .pnToggle small { font-size:9px; }
+  .pnSwitch { width:42px; height:23px; }
+  .pnSwitch .track:before { width:17px; height:17px; }
+  .pnSwitch input:checked + .track:before { transform:translateX(19px); }
+  .pnVoltage { margin-bottom:10px; }
+  .pnVoltageTop { font-size:10px; }
+  .pnVoltageTop strong { font-size:17px; }
+  .pnVoltage input { margin:3px 0 0; }
+  .pnScale { font-size:8px; }
+  .pnDiagram { height:clamp(165px,47vw,205px); border-radius:9px; }
+  .pnSide, .pnBoundary { height:72%; }
+  .pnSide { width:37%; }
+  .pnBoundary { width:clamp(66px,22%,112px); }
+  .pnLabel { top:12px; font-size:12px; }
+  .pnChargeInfo { bottom:10px; font-size:8px; text-align:center; max-width:95%; }
+  .pnParticle { width:7px; height:7px; }
+  .pnIon { width:14px; height:14px; font-size:9px; }
+  .pnLegend { gap:8px 12px; font-size:9px; margin-top:8px; }
+  .pnInfo { margin-top:10px; padding:10px; font-size:11px; }
+  .pnFormula { font-size:13px; }
+  .pnGraphCard { min-height:0; }
+  .pnGraphWrap { flex:none; height:clamp(245px,72vw,310px); min-height:0; }
+  .pnGraphReadout { font-size:10px; gap:6px; }
+  .pnBreakdown { font-size:10px; }
+  .pnPageNote { margin-top:12px; font-size:9px; }
+
+  /* Radio page: arrange the controls as a compact vertical instrument,
+     rather than shrinking the desktop two-column arrangement. */
+  #labTrack > main { padding:0 12px 24px; }
+  #labTrack > main > header,
+  #labTrack > main > .game,
+  #labTrack > main > .missionBrief,
+  #labTrack > main > .section,
+  #labTrack > main > .foot,
+  #labTrack > main > .pageNav {
+    width:100%; max-width:none;
+  }
+  #labTrack > main > header { gap:8px; padding-bottom:12px; }
+  #labTrack > main > header h1 { font-size:23px; }
+  #labTrack > main > header .sub { font-size:11px; }
+  #labTrack > main > header .badge { font-size:8px; padding:4px 6px; }
+  .game { margin-top:11px; }
+  .gameMain { padding:13px; border-radius:14px; }
+  .radioFace { min-height:0; padding:13px 12px 25px; margin-bottom:7px; }
+  .radioFace:before { right:10px; top:13px; width:54px; height:48px; opacity:.24; }
+  .radioFace .target { font-size:clamp(34px,10vw,46px); }
+  .radioScale { margin-left:0; margin-right:0; width:100%; }
+  .targetHint { font-size:11px; text-align:center; }
+
+  .controlBay {
+    display:flex; flex-direction:column; align-items:stretch;
+    gap:8px; margin:8px 0 5px; padding:0;
+  }
+  .volumeControl {
+    position:relative; left:auto; top:auto;
+    width:88px; height:88px; margin:2px auto 8px;
+  }
+  .volumeKnob { width:82px; height:82px; }
+  .volumeKnobPointer { height:32px; }
+  .volumeKnobCenter { width:34px; height:34px; font-size:15px; }
+  .knobRow {
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; width:100%; min-height:0; gap:5px;
+    position:relative;
+  }
+  .knobRow > .dialReadout,
+  .controlBay .dialReadout {
+    position:static !important; left:auto; top:auto;
+    transform:none !important; order:0;
+    width:auto !important; min-width:0 !important; max-width:100% !important;
+    margin:0; padding:0; text-align:center; pointer-events:none;
+  }
+  .knobRow > .dialReadout span,
+  .controlBay .dialReadout span {
+    font-size:10px !important; letter-spacing:.14em; line-height:1.4;
+  }
+  .knobRow > .dialReadout strong,
+  .controlBay .dialReadout strong {
+    font-size:clamp(27px,8vw,34px) !important; line-height:1.15;
+  }
+  .knobRow > .dialReadout small,
+  .controlBay .dialReadout small {
+    font-size:10px !important; margin-top:2px;
+  }
+  .knobPanel {
+    order:1; display:flex; justify-content:center; align-items:center;
+    width:100%; min-width:0; margin:0; flex:none;
+  }
+  .knobPanel .dialArea {
+    width:100%; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:0; margin:0; padding:0;
+  }
+  .dialAssembly { width:190px; height:190px; padding:0; margin:0 auto; }
+  .dialAssembly:before { inset:0; }
+  .dial { width:158px; height:158px; }
+  .dialPointer { height:61px; }
+  .dialCenter { width:52px; height:52px; font-size:12px; }
+  .knobRow .dialMin, .knobRow .dialMax { display:none; }
+  .controlBay .junction {
+    width:min(100%,350px); height:125px; min-height:0;
+    margin:0 auto; flex-wrap:nowrap;
+  }
+  .controlBay .junction .side,
+  .controlBay .junction .region {
+    height:76px; min-height:76px;
+  }
+  .controlBay .junction .region { width:clamp(48px,16vw,64px); min-width:48px; }
+  .controlBay .junction .side { flex:1 1 0; }
+  .controlBay .junction .charge { font-size:13px; }
+  .controlBay .junction .charge small { font-size:9px; }
+  .readouts { grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; margin-top:10px; }
+  .readout { padding:8px 5px; border-radius:8px; min-width:0; }
+  .readout b { font-size:14px; overflow-wrap:anywhere; }
+  .readout span { font-size:9px; line-height:1.25; display:block; }
+  .freqBox { margin-top:11px; padding:11px 8px; }
+  .freq { font-size:clamp(30px,9vw,38px); }
+  .freqBox .small { font-size:9px; }
+  .status { font-size:11px; }
+  .missionBrief { margin-top:15px; }
+  .missionBrief .sidePanel { padding:14px; }
+  .missionBrief .sidePanel h2 { font-size:19px; }
+  .missionBrief .sidePanel p { font-size:12px; }
+
+  .sharedLearning { padding:0 12px 32px; }
+  .section { margin-top:20px; }
+  .section h2 { font-size:20px; line-height:1.2; }
+  .sectionHead { align-items:flex-start; gap:8px; }
+  .sectionLead { font-size:11px; }
+  .formulaGrid { grid-template-columns:minmax(0,1fr); gap:8px; }
+  .formula { padding:12px; }
+  .eq { font-size:18px; overflow-wrap:anywhere; }
+  .knowledge { grid-template-columns:minmax(0,1fr); gap:8px; }
+  .knowledge article { padding:12px; }
+  .knowledge h3 { font-size:14px; }
+  .knowledge p { font-size:11px; }
+  .note { font-size:11px; padding:11px; }
+  .pageNav { margin:8px auto 0; }
+  .liftDial { width:min(330px,90vw); height:auto; aspect-ratio:460 / 288; }
+  .liftStop { top:39% !important; font-size:18px !important; }
+  .liftStop1 { left:12% !important; }
+  .liftStop2 { right:13% !important; }
+  .missionToast { right:10px; bottom:10px; width:calc(100vw - 20px); }
+}
+@media screen and (max-width:380px) {
+  .pnCard { padding:11px; }
+  .pnDiagram { height:160px; }
+  .pnChargeInfo { font-size:7px; }
+  .pnLegend { font-size:8px; gap:7px; }
+  .dialAssembly { width:174px; height:174px; }
+  .dial { width:144px; height:144px; }
+  .dialPointer { height:55px; }
+  .controlBay .junction .region { width:48px; }
+  .readout b { font-size:12px; }
+}
+
+
+/* Portrait refinements requested: compact navigation dial and repositioned radio badge.
+   These are visual-only overrides; no interaction or tuning logic is changed. */
+@media screen and (max-width: 600px) {
+  .pageNav .liftDial { width:min(170px,46vw) !important; height:auto !important; aspect-ratio:460 / 288 !important; margin:0 auto !important; }
+  .pageNav .liftDialFace { width:100%; height:100%; }
+  .pageNav .liftStop { font-size:11px !important; min-width:22px; min-height:22px; }
+  .missionToast .radioSpeaker { left:12px !important; right:auto !important; top:-36px !important; bottom:auto !important; }
+  .missionToast .radioSpeaker .radioAvatar { font-size:29px !important; line-height:1 !important; }
+  .missionToast .toastTitle { margin-right:0 !important; }
+}
+
+
+
+
+/* Corrected portrait elevator indicator positions: align numbers with the two upper side tick marks. */
+@media screen and (max-width: 600px) {
+  .pageNav .liftDial > button.liftStop {
+    top: 49.5% !important;
+    transform: translateY(-50%) !important;
+    z-index: 5 !important;
+  }
+  .pageNav .liftDial > button.liftStop1 {
+    left: 11.5% !important;
+    right: auto !important;
+  }
+  .pageNav .liftDial > button.liftStop2 {
+    right: 11.5% !important;
+    left: auto !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<div id="overlay"><div class="modal">
+  <span class="badge">INTERACTIVE SEMICONDUCTOR LAB</span>
+  <h2>📻 Varactor Tuner</h2>
+  <p>Can you tune three radio stations using <b>one voltage-controlled capacitor</b>? Turn the knob and watch the depletion region, capacitance, and resonant frequency change together.</p>
+  <p><b>Try to predict the direction before moving the slider:</b><br>V<sub>R</sub> ↑ → W ↑ → C<sub>j</sub> ↓ → f<sub>0</sub> ↑</p>
+  <button id="start">Start Lab</button>
+</div></div>
+
+
+<div id="missionToast" class="missionToast hidden" aria-live="polite" aria-atomic="true"></div>
+<div id="missionMini" class="missionMini hidden" aria-label="Open radio mission">📻</div>
+
+
+<div id="labViewport"><div id="labTrack">
+<section id="pnLabPage" class="labIntroPage">
+  <div class="pnHero">
+    <span class="badge">PAGE 1 • SEMICONDUCTOR VISUALIZER</span>
+    <h2>PN Junction &amp; Depletion Region Visualizer</h2>
+    <p>Watch reverse bias pull mobile carriers away from the junction, widen the depletion region, and move the varactor's resonant frequency.</p>
+  </div>
+  <div class="pnGrid">
+    <div class="pnCard">
+      <h3>1 · PN Junction &amp; Depletion Region</h3>
+      <p class="lead">Turn reverse bias on and sweep V<sub>R</sub> to see the carriers and depletion region respond.</p>
+      <div class="pnControls">
+        <div class="pnToggle"><span><b>Reverse voltage circuit</b><small>Master ON / OFF control</small></span></div>
+        <label class="pnSwitch"><input id="pnMaster" type="checkbox" checked><span class="track"></span></label>
+      </div>
+      <div class="pnVoltage">
+        <div class="pnVoltageTop"><span>Reverse Voltage V<sub>R</sub></span><strong id="pnVRValue">14.00 V</strong></div>
+        <input id="pnVRSlider" type="range" min="0" max="15" step="0.01" value="14" aria-label="Reverse Voltage V R">
+        <div class="pnScale"><span>0 V</span><span>5 V</span><span>10 V</span><span>14 V</span><span>15 V</span></div>
+      </div>
+      <div id="pnDiagram" class="pnDiagram" aria-label="Animated PN junction diagram">
+        <div class="pnSide pSide"><div class="pnLabel">P-SIDE</div><div class="pnChargeInfo">mobile holes · warm orange/red</div></div>
+        <div id="pnBoundary" class="pnBoundary"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 12px 'Courier New',monospace;color:#e1e1d8;writing-mode:vertical-rl;letter-spacing:.1em">DEPLETION</div></div>
+        <div class="pnSide nSide"><div class="pnLabel">N-SIDE</div><div class="pnChargeInfo">mobile electrons · cyan/blue</div></div>
+      </div>
+      <div class="pnLegend"><span><i class="pnDot h"></i> Mobile holes</span><span><i class="pnDot e"></i> Mobile electrons</span><span><i class="pnDot i"></i> Immobile ions</span></div>
+      <div class="pnInfo"><b>Why does this become a capacitor?</b><br>The widened depletion region has very few mobile carriers, so it acts as the <b>dielectric insulator</b>. The P and N regions act as the conductive plates. Together, they form a voltage-controlled capacitor — a <b>varactor</b>.<div class="pnFormula">P plate · depletion dielectric · N plate → C<sub>j</sub>(V<sub>R</sub>)</div></div>
+    </div>
+    <div class="pnCard pnGraphCard">
+      <h3>2 · V<sub>R</sub> vs. Resonance Frequency</h3>
+      <p class="lead">The glowing point follows the same V<sub>R</sub> control in Section 1.</p>
+      <div class="pnGraphWrap"><canvas id="pnGraph" class="pnGraph"></canvas></div>
+      <div class="pnGraphReadout"><span>V<sub>R</sub> = <strong id="pnGraphV">14.00 V</strong></span><span>f<sub>0</sub> = <strong id="pnGraphF">— MHz</strong></span></div>
+      <div id="pnBreakdown" class="pnBreakdown"><b>⚠ PN JUNCTION BREAKDOWN</b><br>V<sub>R</sub> has crossed the breakdown limit. Current floods through the junction and the resonant response collapses.</div>
+    </div>
+  </div>
+  <div class="pnPageNote">Breakdown is an educational simulation threshold, not a measurement of a particular diode.</div>
+  
+</section>
+
+<main>
+<header><div><h1>📻 Varactor Tuner</h1><div class="sub">Did you know a PN junction can help an old-school radio tune into signals?</div></div><span class="badge">90s RADIO • PN JUNCTION • LC TUNING</span></header>
+
+
+<section class="game">
+  <div class="card gameMain">
+    <div class="radioFace"><div class="antennaStem"></div><div class="antennaTip"></div><div class="station">NTU RADIO</div>
+    <div class="target" id="target">— MHz</div><div class="radioScale" aria-label="Radio frequency scale"><div class="radioScaleTrack"><span class="scaleTick t86"></span><span class="scaleTick t120"></span><span class="scaleTick t150"></span><span class="scaleTick t186"></span><span class="frequencyNeedle" id="frequencyNeedle"></span></div><div class="radioScaleNumbers"><span>86</span><span>120</span><span>150</span><span>186 MHz</span></div></div></div>
+    <div class="targetHint">Turn the knob to adjust V<sub>R</sub> and change the radio channel.</div>
+
+    <div class="controlBay">
+      <div class="volumeControl" id="volumeControl">
+        <div class="volumeKnobAssembly">
+          <div class="volumeKnob" id="volumeKnob" role="slider" aria-label="Radio volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" tabindex="0">
+            <div class="volumeKnobTicks"></div><div class="volumeKnobPointer" id="volumeKnobPointer"></div><div class="volumeKnobCenter" id="volumeKnobCenter">🔊</div>
+          </div>
+        </div>
+      </div>
+      <div class="knobRow">
+        <div class="dialReadout">
+          <span>CONTROL VOLTAGE</span>
+          <strong id="vrValue">14.00 V</strong>
+          <small>Turn / drag the knob</small>
+        </div>
+        <div class="knobPanel">
+          <div class="dialAssembly">
+            <div class="dial" id="dial" role="slider" aria-label="V R tuning knob" aria-valuemin="0" aria-valuemax="15" aria-valuenow="14" tabindex="0">
+              <div class="dialTicks"></div><div class="dialPointer" id="dialPointer"></div><div class="dialCenter">V<sub>R</sub></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="junction" aria-label="PN junction diagram">
+        <div class="side p"><div class="charge">P<small>holes +</small></div></div>
+        <div class="region" id="depletion"><div class="charge">W<small>depletion</small></div></div>
+        <div class="side n"><div class="charge">N<small>electrons −</small></div></div>
+      </div>
+    </div>
+    <input id="frequencySlider" class="srOnlyRange" type="range" min="85.6" max="186.3" step="0.1" value="120" aria-label="Radio frequency tuning scale"><input id="vr" class="srOnlyRange" type="range" min="0" max="15" step="0.01" value="14" aria-label="V R control voltage">
+
+    <div class="readouts">
+      <div class="readout"><span>Depletion width W</span><b id="w">—</b></div>
+      <div class="readout"><span>Junction capacitance C<sub>j</sub></span><b id="c">—</b></div>
+      <div class="readout"><span>Reactance X<sub>C</sub></span><b id="xc">—</b></div>
+    </div>
+    <div class="freqBox"><div class="small">LIVE RESONANT FREQUENCY</div><div class="freq" id="freq">—</div><div class="status" id="status">Adjust the voltage.</div></div>
+    
+  </div>
+
+</section>
+
+<section class="missionBrief section">
+  <div class="card sidePanel">
+    <span class="badge">MISSION BRIEF</span>
+    <h2>Think like the circuit.</h2>
+    <p>The slider is not directly controlling frequency. It changes the junction's physical structure first.</p>
+    <div class="note"><b>Radio hint:</b> Higher V<sub>R</sub> makes the junction capacitance smaller, which pushes the resonant frequency higher.</div>
+  </div>
+</section>
+
+
+</main>
+</div></div>
+
+<div class="pageNav">
+  <div class="liftDial" role="group" aria-label="Choose slide">
+    <svg class="liftDialFace" viewBox="0 0 240 150" aria-hidden="true">
+      <path class="liftOuter" d="M12 18 A108 108 0 0 0 228 18 Z"/>
+      <path class="liftInner" d="M23 18 A97 97 0 0 0 217 18 Z"/>
+      <path class="liftRim" d="M17 18 A103 103 0 0 0 223 18"/>
+      <g class="liftTicks">
+        <path d="M30 37 L40 32"/><path d="M48 74 L57 66"/>
+        <path d="M79 101 L85 90"/><path d="M120 111 L120 98"/>
+        <path d="M161 101 L155 90"/><path d="M192 74 L183 66"/>
+        <path d="M210 37 L200 32"/>
+      </g>
+      <g class="liftDots">
+        <circle cx="48" cy="74" r="2.3"/><circle cx="79" cy="101" r="2.3"/>
+        <circle cx="120" cy="111" r="2.3"/><circle cx="161" cy="101" r="2.3"/>
+        <circle cx="192" cy="74" r="2.3"/>
+      </g>
+      <g class="liftNeedle">
+        <g class="liftNeedleArm">
+          <path class="liftNeedleShadow" d="M120 20 L120 106"/>
+          <path class="liftNeedleLine" d="M120 20 L120 106"/>
+        </g>
+        <circle class="liftHub" cx="120" cy="18" r="7"/>
+        <circle class="liftHubHighlight" cx="118" cy="16" r="2"/>
+      </g>
+    </svg>
+    <button type="button" class="liftStop liftStop1" data-page="0" aria-label="Go to slide 1">1</button>
+    <button type="button" class="liftStop liftStop2" data-page="1" aria-label="Go to slide 2">2</button>
+  </div>
+</div>
+
+<div class="sharedLearning">
+<section class="section">
+  <div class="sectionHead"><div><h2>Live equations</h2><div class="sectionLead">The equations are not just displayed — their variables update as you tune V<sub>R</sub>.</div></div><span class="badge">REAL-TIME MODEL</span></div>
+  <div class="formulaGrid">
+    <div class="formula"><div class="formulaTitle">① Depletion width</div><div class="eq">W <span class="trend" id="trendW">↕</span> = √[2ε<sub>s</sub>(V<sub>bi</sub> + <span class="live" id="eqV">V<sub>R</sub></span>)/(qN)] <span>=</span> <span class="live" id="eqW">—</span></div><div class="meaning">More reverse bias widens the depletion region.</div></div>
+    <div class="formula"><div class="formulaTitle">② Junction capacitance</div><div class="eq">C<sub>j</sub> <span class="trend" id="trendC">↕</span> = ε<sub>s</sub>A / <span class="live" id="eqW2">W</span> <span>=</span> <span class="live" id="eqC">—</span></div><div class="meaning">A wider depletion region means less capacitance.</div></div>
+    <div class="formula"><div class="formulaTitle">③ Capacitive reactance</div><div class="eq">X<sub>C</sub> <span class="trend" id="trendX">↕</span> = 1/(2πfC) <span>=</span> <span class="live" id="eqX">—</span></div><div class="meaning">This is the AC opposition produced by the capacitor at the current frequency.</div></div>
+    <div class="formula"><div class="formulaTitle">④ Resonant frequency</div><div class="eq">f<sub>0</sub> <span class="trend" id="trendF">↕</span> = 1/(2π√LC<sub>j</sub>) <span>=</span> <span class="live" id="eqF">—</span></div><div class="meaning">Because C<sub>j</sub> decreases, the LC resonant frequency rises.</div></div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="sectionHead"><div><h2>Why is a PN junction a capacitor?</h2><div class="sectionLead">Three ideas are enough to explain the device.</div></div></div>
+  <div class="knowledge">
+    <article><h3>1 · Charges are separated</h3><p>Under reverse bias, mobile carriers move away from the junction, leaving a depleted region with very few mobile carriers.</p></article>
+    <article><h3>2 · The depletion region acts like an insulator</h3><p>The P and N sides contain separated charge, while the depletion region behaves like the dielectric between capacitor plates.</p></article>
+    <article><h3>3 · Voltage changes the capacitance</h3><p>Changing V<sub>R</sub> changes W. Since C is approximately εA/W, the junction becomes a voltage-controlled capacitor.</p></article>
+  </div>
+  <div class="note"><b>Where is this useful? — Radio receivers</b><br>In a tuned radio receiver, the antenna picks up many electromagnetic waves at once. An <b>LC resonant circuit</b> can act as a resonant band-pass filter: signals near its resonant frequency are passed strongly, while signals far from that frequency are suppressed. A varactor gives the receiver an electronic way to move that resonant frequency. Changing V<sub>R</sub> changes C<sub>j</sub>, and therefore changes <b>f<sub>0</sub> = 1/(2π√LC<sub>j</sub>)</b>. So instead of mechanically turning a variable capacitor, the radio can use a voltage to select a different channel. <br><br><b>In simple terms:</b> antenna → many stations → LC filter selects one frequency → varactor voltage moves the selected station.</div>
+</section>
+
+<div class="foot">Illustrative device model for learning. The numerical constants are chosen to make the tuning relationship visible and interactive; they are not measurements of a particular commercial varactor.</div>
+</div>
+
+<script>
+(() => {
+  const targets=[120,169,145];
+  const stageStartVR=[14,1,10];
+  let round=0,running=false,score=0,finished=false;
+  let stableTuneTimer=null,stableTuneRound=null;
+  const STABLE_TUNE_MS=1500;
+  let missionStage='start', selectedRound=null, completionTimer=null;
+  const vr=document.getElementById('vr'),vrValue=document.getElementById('vrValue'),dial=document.getElementById('dial'),dialPointer=document.getElementById('dialPointer');
+  const frequencySlider=document.getElementById('frequencySlider'),scaleReadout=document.getElementById('scaleReadout');
+  const wEl=document.getElementById('w'),cEl=document.getElementById('c'),xcEl=document.getElementById('xc');
+  const freqEl=document.getElementById('freq'),statusEl=document.getElementById('status');
+  const depletion=document.getElementById('depletion'),targetEl=document.getElementById('target');
+  const scoreText={textContent:''};
+  const overlay=document.getElementById('overlay');
+  const missionToast=document.getElementById('missionToast'), missionMini=document.getElementById('missionMini');
+  const eqV=document.getElementById('eqV'),eqW=document.getElementById('eqW'),eqW2=document.getElementById('eqW2'),eqC=document.getElementById('eqC'),eqX=document.getElementById('eqX'),eqF=document.getElementById('eqF');
+  const trendW=document.getElementById('trendW'),trendC=document.getElementById('trendC'),trendX=document.getElementById('trendX'),trendF=document.getElementById('trendF');
+
+  // Lightweight Web Audio radio sound layer. No external audio files are needed.
+  // It is deliberately scoped to Slide 2 / the tuning mission only.
+  let audioCtx=null, radioMasterGain=null, radioNoise=null, radioNoiseGain=null, radioNoiseFilter=null, tuningOsc=null, tuningGain=null;
+  let audioReady=false, lastAudioV=null, lastAudioTime=0, lockSoundPlayed=false;
+  let volumeLevel=0.72, volumeMuted=false, volumeBeforeMute=0.72;
+  const volumeControl=document.getElementById('volumeControl'),volumeKnob=document.getElementById('volumeKnob'),volumeKnobPointer=document.getElementById('volumeKnobPointer'),volumeKnobCenter=document.getElementById('volumeKnobCenter');
+  // Real station recordings: Music intentionally has no recording yet.
+  // News + Comedy are played as a continuous radio stream with randomized
+  // entry points. Each return to a station gets a different starting point,
+  // while staying on the station simply continues from the current position.
+  const stationAudioData={
+    0:[
+      'assets/audio/track_00.mp3',
+      'assets/audio/track_01.mp3',
+      'assets/audio/track_02.mp3',
+      'assets/audio/track_03.mp3',
+      'assets/audio/track_04.mp3',
+      'assets/audio/track_05.mp3',
+      'assets/audio/track_06.mp3'
+    ],
+    1:['assets/audio/track_07.mp3','assets/audio/track_08.mp3'],
+    2:'assets/audio/track_09.mp3'
+  };
+  const stationAudio={0:null,1:null,2:null};
+  const stationAudioSource={0:null,1:null,2:null};
+  const stationAudioGain={0:null,1:null,2:null};
+  const stationAudioFilter={0:null,1:null,2:null};
+  const stationAudioState={0:{lastStart:null,plays:0},1:{lastStart:null,plays:0},2:{lastStart:null,plays:0}};
+  let activeStationAudio=null;
+  let pendingStationAudio=null;
+  let stationTransitionToken=0;
+  let musicTrackIndex=0;
+  let musicNeedsRandomStart=true;
+  let newsTrackIndex=0;
+  let newsNeedsRandomStart=true;
+  function setupStationAudio(i){
+    if(!stationAudioData[i] || stationAudio[i]) return;
+    const el=new Audio();
+    const initialSrc=Array.isArray(stationAudioData[i]) ? stationAudioData[i][0] : stationAudioData[i];
+    el.src=initialSrc; el.preload='auto'; el.loop=!Array.isArray(stationAudioData[i]);
+    el.setAttribute('aria-hidden','true');
+    el.style.display='none'; document.body.appendChild(el);
+    stationAudio[i]=el;
+
+    // Music is a continuous ordered broadcast: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 1...
+    // The randomization happens only when the radio is powered on, not between songs.
+    if(i===0 || i===1){
+      el.addEventListener('ended',()=>{
+        if(!stationAudio[i] || stationAudio[i]!==el || !Array.isArray(stationAudioData[i])) return;
+        if(i===0) musicTrackIndex=(musicTrackIndex+1)%stationAudioData[0].length;
+        else newsTrackIndex=(newsTrackIndex+1)%stationAudioData[1].length;
+        // Give the receiver a short, natural channel-change gap instead of
+        // making the next recording snap in instantly.
+        setTimeout(()=>{
+          if(!stationAudio[i] || stationAudio[i]!==el || !stationAudioData[i]) return;
+          const idx=(i===0)?musicTrackIndex:newsTrackIndex;
+          el.src=stationAudioData[i][idx];
+          try{ el.currentTime=0; }catch(_){}
+          const p=el.play();
+          if(p&&p.catch)p.catch(()=>{});
+        },650);
+      });
+    }
+
+    const src=audioCtx.createMediaElementSource(el);
+    // Old AM-radio voicing: deliberately narrow speech bandwidth, gentle mid boost,
+    // soft saturation and compression. This same filter chain is kept for every
+    // Music track as well as the existing News + Comedy recordings.
+    const hp=audioCtx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=260; hp.Q.value=0.65;
+    const lp=audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3600; lp.Q.value=0.8;
+    const mid=audioCtx.createBiquadFilter(); mid.type='peaking'; mid.frequency.value=1450; mid.Q.value=0.85; mid.gain.value=4.5;
+    const shelf=audioCtx.createBiquadFilter(); shelf.type='lowshelf'; shelf.frequency.value=420; shelf.gain.value=-4.0;
+    const shaper=audioCtx.createWaveShaper();
+    const curve=new Float32Array(256); for(let k=0;k<curve.length;k++){const x=k/128-1;curve[k]=Math.tanh(1.9*x)/Math.tanh(1.9);} shaper.curve=curve; shaper.oversample='2x';
+    const comp=audioCtx.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=12; comp.ratio.value=3.5; comp.attack.value=0.008; comp.release.value=0.16;
+    // Keep Music on the same established radio chain, but make the News and
+    // Comedy broadcasts sound more distinctly like the old radio receiver.
+    if(i===1 || i===2){
+      hp.frequency.value=320;
+      lp.frequency.value=3000;
+      mid.frequency.value=1550;
+      mid.Q.value=0.9;
+      mid.gain.value=7.0;
+      shelf.frequency.value=430;
+      shelf.gain.value=-6.0;
+      comp.threshold.value=-21;
+      comp.ratio.value=4.2;
+    }
+    const gain=audioCtx.createGain(); gain.gain.value=0;
+    src.connect(hp).connect(lp).connect(mid).connect(shelf).connect(shaper).connect(comp).connect(gain);
+    gain.connect(radioMasterGain || audioCtx.destination);
+    stationAudioSource[i]=src;
+    stationAudioGain[i]=gain;
+    stationAudioFilter[i]=lp;
+  }
+
+  function randomStationStart(i){
+    const el=stationAudio[i]; if(!el || !Number.isFinite(el.duration) || el.duration<=2) return 0;
+    const d=el.duration;
+    const st=stationAudioState[i];
+    // Comedy first entry: around 2:15. News is NEVER allowed before 00:19.
+    let min=(i===1)?19:18, max=Math.max(min,d-18);
+    if(st.plays===0 && i===2){ min=Math.max(18,135-20); max=Math.min(d-18,135+20); }
+    let pos=min+Math.random()*Math.max(1,max-min);
+    if(st.lastStart!==null){
+      for(let tries=0;tries<12 && Math.abs(pos-st.lastStart)<35;tries++) pos=min+Math.random()*Math.max(1,max-min);
+      if(Math.abs(pos-st.lastStart)<35) pos=Math.min(max,Math.max(min,st.lastStart+70));
+    }
+    st.lastStart=pos; st.plays++;
+    return Math.min(Math.max(min,pos),Math.max(min,d-0.5));
+  }
+  function stopStationAudio(immediate=false){
+    [0,1,2].forEach(i=>{
+      const el=stationAudio[i], g=stationAudioGain[i];
+      if(!el)return;
+      try{
+        if(g) setAudioGain(g,0,immediate?0.01:0.08);
+        const delay=immediate?20:100;
+        setTimeout(()=>{try{el.pause();}catch(_){}},delay);
+      }catch(_){}
+    });
+    // The next time the radio is powered on, Music starts at a newly randomized
+    // track, then continues sequentially from there.
+    musicNeedsRandomStart=true;
+    newsNeedsRandomStart=true;
+    activeStationAudio=null;
+    pendingStationAudio=null;
+    stationTransitionToken++;
+  }
+
+  // --- Continuous RF-style station reception ---
+  // Every recorded station is treated like a real broadcast that exists in the
+  // air all the time. The knob does NOT "select" an audio file; it changes how
+  // strongly the receiver's tuned circuit hears each station.
+  function stationProximityGain(i, freqMHz){
+    if(!stationAudioData[i] || !Number.isFinite(freqMHz)) return 0;
+    const d=Math.abs(freqMHz-targets[i]);
+    // Very tight channel response: the station is only meaningfully heard
+    // in the three-frequency neighborhood target-1, target, target+1.
+    // Outside that neighborhood it falls rapidly into the static floor.
+    const cutoff=1.18;
+    if(d>=cutoff) return 0;
+    const x=d/cutoff;
+    // Very steep channel skirts: centered = full signal, +/-1 MHz = only a
+    // small fringe, and anything beyond that rapidly disappears into static.
+    const edge=Math.pow(1-x*x,3.2);
+    return Math.max(0,Math.min(1,edge));
+  }
+
+  function ensureStationStream(i){
+    if(!stationAudioData[i]) return;
+    ensureAudio(); if(!audioReady)return;
+    setupStationAudio(i);
+    const el=stationAudio[i];
+    if(!el)return;
+
+    if(i===0 && musicNeedsRandomStart){
+      musicTrackIndex=Math.floor(Math.random()*stationAudioData[0].length);
+      el.src=stationAudioData[0][musicTrackIndex];
+      try{ el.currentTime=0; }catch(_){}
+      musicNeedsRandomStart=false;
+    }
+    if(i===1 && newsNeedsRandomStart && Array.isArray(stationAudioData[1])){
+      newsTrackIndex=Math.floor(Math.random()*stationAudioData[1].length);
+      el.src=stationAudioData[1][newsTrackIndex];
+      try{ el.currentTime=0; }catch(_){}
+      newsNeedsRandomStart=false;
+    }
+
+    // Start each station only once. Music continues through the ordered playlist;
+    // News + Comedy keep their existing continuous-stream behavior.
+    if(el.paused){
+      try{
+        if(i!==0 && (!Number.isFinite(el.currentTime) || el.currentTime<=0)){
+          el.currentTime=randomStationStart(i);
+        }
+      }catch(_){}
+      const p=el.play();
+      if(p&&p.catch)p.catch(()=>{});
+    }
+  }
+
+  function updateStationReception(freqMHz){
+    const listening=(missionStage==='tuning'||missionStage==='found'||missionStage==='stay');
+    if(!listening){
+      if(audioReady){
+        setAudioGain(stationAudioGain[1],0,0.12);
+        setAudioGain(stationAudioGain[2],0,0.12);
+      }
+      return;
+    }
+
+    ensureAudio(); if(!audioReady)return;
+
+    // Both stations are present in the ether. The tuned circuit decides how
+    // much of each one reaches the speaker.
+    [0,1,2].forEach(i=>{
+      ensureStationStream(i);
+      const g=stationAudioGain[i];
+      if(!g)return;
+      const reception=stationProximityGain(i,freqMHz);
+      // Keep the total station level comfortable while allowing a station to
+      // become increasingly clear as the knob approaches its carrier.
+      const level=(i===1 || i===2 ? 0.44 : 0.36)*reception;
+      setAudioGain(g,level,0.10);
+    });
+  }
+
+  function crossfadeToStation(i){
+    // Compatibility hook for the existing mission flow. The actual audio
+    // selection is now continuous and frequency-dependent, not lock-dependent.
+    ensureStationStream(i);
+    updateStationReception(calc().f);
+  }
+
+  function startStationAudio(i){ crossfadeToStation(i); }
+
+  function keepStationAudio(i){
+    ensureStationStream(i);
+    updateStationReception(calc().f);
+  }
+
+  function ensureAudio(){
+    try{
+      if(!audioCtx){
+        audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+        radioMasterGain=audioCtx.createGain();
+        radioMasterGain.gain.value=0.32*volumeGainCurve(volumeLevel);
+        radioMasterGain.connect(audioCtx.destination);
+        const master=radioMasterGain;
+        radioNoise=audioCtx.createBufferSource();
+        const buffer=audioCtx.createBuffer(1,audioCtx.sampleRate*2,audioCtx.sampleRate);
+        const data=buffer.getChannelData(0);
+        for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*0.55;
+        radioNoise.buffer=buffer; radioNoise.loop=true;
+        radioNoiseFilter=audioCtx.createBiquadFilter(); radioNoiseFilter.type='bandpass'; radioNoiseFilter.frequency.value=1150; radioNoiseFilter.Q.value=0.8;
+        radioNoiseGain=audioCtx.createGain(); radioNoiseGain.gain.value=0;
+        radioNoise.connect(radioNoiseFilter).connect(radioNoiseGain).connect(master); radioNoise.start();
+        tuningOsc=audioCtx.createOscillator(); tuningOsc.type='triangle'; tuningOsc.frequency.value=430;
+        tuningGain=audioCtx.createGain(); tuningGain.gain.value=0;
+        tuningOsc.connect(tuningGain).connect(master); tuningOsc.start();
+      }
+      if(audioCtx.state==='suspended') audioCtx.resume();
+      audioReady=true;
+    }catch(e){ audioReady=false; }
+  }
+  function setAudioGain(node,value,duration=0.08){
+    if(!audioReady||!node)return; const now=audioCtx.currentTime;
+    node.gain.cancelScheduledValues(now); node.gain.setTargetAtTime(Math.max(0,Math.min(1,value)),now,duration);
+  }
+  function radioVolumeEnabled(){
+    return missionStage==='tuning'||missionStage==='found'||missionStage==='stay';
+  }
+  // A small perceptual curve makes 10% -> 20% -> 30% steps clearly audible
+  // while keeping the top end strong enough to feel like the original radio.
+  function volumeGainCurve(v){
+    const x=Math.max(0,Math.min(1,v));
+    return Math.pow(x,0.70);
+  }
+  function applyRadioVolume(immediate=false){
+    ensureAudio();
+    if(!audioReady || !radioMasterGain)return;
+    const target=0.32*(volumeMuted?0:volumeGainCurve(volumeLevel));
+    const now=audioCtx.currentTime;
+    radioMasterGain.gain.cancelScheduledValues(now);
+    radioMasterGain.gain.setTargetAtTime(target,now,immediate?0.005:0.025);
+    volumeKnobPointer.style.transform='translate(-50%,-100%) rotate('+(-135+volumeLevel*270)+'deg)';
+    volumeKnobCenter.textContent=volumeMuted?'🔇':'🔊';
+    volumeKnob.setAttribute('aria-valuenow',String(Math.round((volumeMuted?0:volumeLevel)*100)));
+  }
+  function setRadioVolume(v){
+    volumeLevel=Math.max(0,Math.min(1,v));
+    if(volumeLevel>0) volumeBeforeMute=volumeLevel;
+    volumeMuted=volumeLevel<=0;
+    applyRadioVolume(false);
+    volumeKnobCenter.textContent=volumeMuted?'🔇':'🔊';
+  }
+  function toggleRadioMute(){
+    if(!radioVolumeEnabled())return;
+    if(volumeMuted){
+      volumeLevel=Math.max(0.05,volumeBeforeMute||0.72);
+      volumeMuted=false;
+    }else{
+      // Keep volumeLevel untouched so the red needle stays exactly where the
+      // user left it. Mute is an audio-state change, not a knob-position change.
+      volumeBeforeMute=Math.max(0.05,volumeLevel);
+      volumeMuted=true;
+    }
+    applyRadioVolume(true);
+  }
+  function updateVolumeVisual(){
+    const enabled=radioVolumeEnabled();
+    volumeKnob.classList.toggle('disabled',!enabled);
+    volumeKnobPointer.style.transform='translate(-50%,-100%) rotate('+(-135+volumeLevel*270)+'deg)';
+    volumeKnobCenter.textContent=volumeMuted?'🔇':'🔊';
+    volumeKnob.setAttribute('aria-valuenow',String(Math.round((volumeMuted?0:volumeLevel)*100)));
+  }
+  let volumeDrag=false,lastVolumePointerAngle=null;
+  function volumePointerAngle(clientX,clientY){
+    const r=volumeKnob.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    return Math.atan2(clientY-cy,clientX-cx)*180/Math.PI;
+  }
+  function setVolumeFromPointer(clientX,clientY){
+    if(!radioVolumeEnabled())return;
+    const angle=volumePointerAngle(clientX,clientY);
+    if(lastVolumePointerAngle===null){lastVolumePointerAngle=angle;return;}
+    let delta=angle-lastVolumePointerAngle;
+    if(delta>180)delta-=360;if(delta<-180)delta+=360;
+    lastVolumePointerAngle=angle;
+    setRadioVolume(volumeLevel+delta/270);
+    updateVolumeVisual();
+  }
+  function endVolumeDrag(){volumeDrag=false;lastVolumePointerAngle=null;volumeKnob.classList.remove('dragging');}
+  volumeKnob.addEventListener('pointerdown',e=>{
+    if(!radioVolumeEnabled())return;
+    e.preventDefault();volumeDrag=true;lastVolumePointerAngle=volumePointerAngle(e.clientX,e.clientY);volumeKnob.classList.add('dragging');
+    try{volumeKnob.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  volumeKnob.addEventListener('pointermove',e=>{if(volumeDrag)setVolumeFromPointer(e.clientX,e.clientY)});
+  volumeKnob.addEventListener('pointerup',endVolumeDrag);
+  volumeKnob.addEventListener('pointercancel',endVolumeDrag);
+  volumeKnob.addEventListener('lostpointercapture',endVolumeDrag);
+  volumeKnob.addEventListener('dblclick',e=>{e.preventDefault();toggleRadioMute();});
+  volumeKnob.addEventListener('keydown',e=>{
+    if(!radioVolumeEnabled())return;
+    let v=volumeMuted?volumeBeforeMute:volumeLevel;
+    if(e.key==='ArrowUp'||e.key==='ArrowRight')v+=0.05;else if(e.key==='ArrowDown'||e.key==='ArrowLeft')v-=0.05;else if(e.key===' '){e.preventDefault();toggleRadioMute();return;}else return;
+    e.preventDefault();setRadioVolume(v);updateVolumeVisual();
+  });
+
+  function radioPowerClick(on=true){
+    // Heavy physical plastic radio switch: a dull mechanical CHUNK/KLAK,
+    // intentionally not an electronic beep. ON and OFF use the same mechanism
+    // with a tiny timing/weight variation so it feels like a real switch.
+    ensureAudio(); if(!audioReady)return;
+    applyRadioVolume(true);
+    if(on) ensureStationStream(0);
+    const now=audioCtx.currentTime;
+    // The physical power-switch KLAK is outside the radio volume control.
+    // It remains audible even when the radio volume is muted.
+    const clickBus=audioCtx.createGain();
+    clickBus.gain.value=1.0;
+    clickBus.connect(audioCtx.destination);
+
+    // Short low-frequency body/thunk.
+    const body=audioCtx.createOscillator(), bodyGain=audioCtx.createGain();
+    body.type='sine';
+    body.frequency.setValueAtTime(on?118:105,now);
+    body.frequency.exponentialRampToValueAtTime(on?62:55,now+0.075);
+    bodyGain.gain.setValueAtTime(0.0001,now);
+    bodyGain.gain.exponentialRampToValueAtTime(0.52,now+0.003);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001,now+0.095);
+    body.connect(bodyGain).connect(clickBus); body.start(now); body.stop(now+0.11);
+
+    // Noisy plastic impact gives the dull, tactile snap instead of a clean tone.
+    const n=audioCtx.createBufferSource();
+    const nb=audioCtx.createBuffer(1,Math.floor(audioCtx.sampleRate*0.085),audioCtx.sampleRate);
+    const nd=nb.getChannelData(0);
+    for(let i=0;i<nd.length;i++){
+      const t=i/audioCtx.sampleRate;
+      nd[i]=(Math.random()*2-1)*Math.exp(-t*105);
+    }
+    n.buffer=nb;
+    const nf=audioCtx.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=1250; nf.Q.value=0.45;
+    const ng=audioCtx.createGain(); ng.gain.setValueAtTime(0.0001,now);
+    ng.gain.exponentialRampToValueAtTime(0.46,now+0.002);
+    ng.gain.exponentialRampToValueAtTime(0.0001,now+0.075);
+    n.connect(nf).connect(ng).connect(clickBus); n.start(now); n.stop(now+0.09);
+
+    // Tiny delayed secondary snap = the plastic mechanism settling into place.
+    const snap=audioCtx.createOscillator(), sg=audioCtx.createGain();
+    snap.type='triangle'; snap.frequency.value=430;
+    const t=now+(on?0.028:0.035);
+    sg.gain.setValueAtTime(0.0001,t); sg.gain.exponentialRampToValueAtTime(0.085,t+0.002);
+    sg.gain.exponentialRampToValueAtTime(0.0001,t+0.035);
+    snap.connect(sg).connect(clickBus); snap.start(t); snap.stop(t+0.045);
+  }
+  
+  function updateTuningAudio(err){
+    const listening=(missionStage==='tuning'||missionStage==='found'||missionStage==='stay');
+    if(!listening||!audioReady){
+      setAudioGain(radioNoiseGain,0);
+      setAudioGain(tuningGain,0);
+      return;
+    }
+
+    const closeness=Math.max(0,Math.min(1,err/0.12));
+    // Real-radio behavior: static is the receiver's noise floor between
+    // channels, but it must collapse when the tuned circuit is actually
+    // receiving a station. The previous version used a broad Gaussian noise
+    // curve, which left a noticeable "ring" of static even while a station
+    // was being received. Tie the noise directly to the same RF channel
+    // response used by the station audio instead.
+    const f=calc().f;
+    const stationReception=[0,1,2]
+      .filter(i=>stationAudioData[i])
+      .map(i=>stationProximityGain(i,f));
+    const strongestReception=stationReception.length
+      ? Math.max(...stationReception)
+      : 0;
+
+    // Between stations the static floor is strong. As soon as the receiver
+    // enters a station's narrow 3-MHz neighborhood, static falls with the
+    // station signal, reaching only a tiny residual at the carrier center.
+    // Completely mute the static at the tuned station carrier. Between
+    // stations it returns smoothly, so the receiver still has a natural
+    // noise floor without a static ring sitting on top of the broadcast.
+    // Hard-zero the receiver noise at a real station carrier. The tiny
+    // epsilon guard avoids floating-point residue from ever becoming audible.
+    const staticAmount=strongestReception>=0.999999 ? 0 : 0.045*Math.pow(1-strongestReception,2.2);
+    setAudioGain(radioNoiseGain,staticAmount,0.06);
+    if(radioNoiseFilter){
+      radioNoiseFilter.frequency.setTargetAtTime(
+        780+1250*closeness,audioCtx.currentTime,0.06
+      );
+    }
+    if(tuningOsc){
+      tuningOsc.frequency.setTargetAtTime(
+        370+500*closeness,audioCtx.currentTime,0.06
+      );
+    }
+    // The tuning oscillator is also part of the audible "ring". Keep it
+    // as a between-station tuning cue, but remove it completely whenever a
+    // real station is being received so the carrier is genuinely clean.
+    const tuningCueLevel=(0.004+0.014*closeness)*(1-strongestReception);
+    setAudioGain(tuningGain,tuningCueLevel,0.06);
+
+    // The important part: station audio is continuously controlled by the
+    // actual knob frequency. There is no "wait until locked" gate anymore.
+    updateStationReception(calc().f);
+  }
+
+  function tuningMoveSound(){
+    if(missionStage!=='tuning')return; ensureAudio(); if(!audioReady)return;
+    const now=performance.now();
+    if(now-lastAudioTime<35)return;
+    lastAudioTime=now;
+    if(lastAudioV!==null){
+      const delta=Math.abs(parseFloat(vr.value)-lastAudioV);
+      if(delta>0.002){
+        const burst=Math.min(0.055,0.012+delta*0.11);
+        setAudioGain(tuningGain,burst,0.018);
+        setTimeout(()=>setAudioGain(tuningGain,0,0.06),28);
+      }
+    }
+    lastAudioV=parseFloat(vr.value);
+  }
+  function stationLockSound(){
+    ensureAudio(); if(!audioReady)return;
+    const now=audioCtx.currentTime;
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(760,now); o.frequency.exponentialRampToValueAtTime(1180,now+0.09);
+    g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.16,now+0.008); g.gain.exponentialRampToValueAtTime(0.0001,now+0.16);
+    o.connect(g).connect(audioCtx.destination); o.start(now); o.stop(now+0.18);
+    setTimeout(()=>{ if(audioReady){ const o2=audioCtx.createOscillator(),g2=audioCtx.createGain(); o2.type='sine'; o2.frequency.value=1320; g2.gain.setValueAtTime(0.0001,audioCtx.currentTime); g2.gain.exponentialRampToValueAtTime(0.09,audioCtx.currentTime+0.005); g2.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.11); o2.connect(g2).connect(audioCtx.destination); o2.start(); o2.stop(audioCtx.currentTime+0.12); }},105);
+  }
+  let lastDirection=0, lastV=parseFloat(vr.value);
+  let prevVals=null;
+  let trendDirs={W:0,C:0,X:0,F:0};
+  function setTrend(el,dir){el.textContent=dir>0?'↑':dir<0?'↓':'↕';el.classList.toggle('down',dir<0);}
+  function updateTrends(x){
+    if(prevVals){
+      if(x.W>prevVals.W) trendDirs.W=1; else if(x.W<prevVals.W) trendDirs.W=-1;
+      if(x.C>prevVals.C) trendDirs.C=1; else if(x.C<prevVals.C) trendDirs.C=-1;
+      if(x.xc>prevVals.X) trendDirs.X=1; else if(x.xc<prevVals.X) trendDirs.X=-1;
+      if(x.f>prevVals.F) trendDirs.F=1; else if(x.f<prevVals.F) trendDirs.F=-1;
+    }
+    prevVals={W:x.W,C:x.C,X:x.xc,F:x.f};
+  }
+
+  // Illustrative silicon-like parameters. They are chosen for a clear educational tuning range.
+  const eps=11.8*8.854e-12,q=1.602e-19,N=1.0e22,Vbi=0.70,A=1.0e-8,L=1.0e-6;
+
+  function calc(){
+    const V=Math.max(0,Math.min(15,parseFloat(vr.value)||0));
+    const W=Math.sqrt(2*eps*(Vbi+V)/(q*N));
+    const C=eps*A/W;
+    const fHz=1/(2*Math.PI*Math.sqrt(L*C));
+    const f=fHz/1e6;
+    const xc=1/(2*Math.PI*fHz*C);
+    return {V,W,C,f,fHz,xc,target:targets[round]};
+  }
+  function render(){
+    const x=calc(),err=Math.abs(x.f-x.target)/x.target;
+    updateTuningAudio(err);
+    updateVolumeVisual();
+    vr.value=x.V.toFixed(2);vrValue.textContent=x.V.toFixed(2)+' V';
+    frequencySlider.value=x.f.toFixed(1);const scalePct=Math.max(0,Math.min(100,(x.f-85.6)/(186.3-85.6)*100));document.getElementById('frequencyNeedle').style.left=scalePct+'%';
+    wEl.textContent=(x.W*1e6).toFixed(2)+' μm';cEl.textContent=(x.C*1e12).toFixed(2)+' pF';xcEl.textContent=Math.round(x.xc)+' Ω';freqEl.textContent=x.f.toFixed(1)+' MHz';targetEl.textContent=x.f.toFixed(1)+' MHz';
+        const junction=depletion.parentElement;
+    const maxDepletion=Math.max(55,Math.min(180,junction.clientWidth-110));
+    const width=Math.max(55,Math.min(maxDepletion,42+x.W*1e6*31));
+    depletion.style.width=width+'px'; const angle=-135+(x.V/15)*270; dialPointer.style.transform='translate(-50%,-100%) rotate('+angle+'deg)'; dial.setAttribute('aria-valuenow',x.V.toFixed(2));
+    eqV.textContent=x.V.toFixed(2)+' V';eqW.textContent=(x.W*1e6).toFixed(2)+' μm';eqW2.textContent=(x.W*1e6).toFixed(2)+' μm';eqC.textContent=(x.C*1e12).toFixed(2)+' pF';eqX.textContent=Math.round(x.xc)+' Ω';eqF.textContent=x.f.toFixed(2)+' MHz';
+    // Keep the detailed PN visualizer on Page 1 bidirectionally linked to the same V_R state.
+    // The knob/varactor controls the PN diagram + plot just like the Page 1 slider.
+    if(typeof window.syncPNFromVR==='function') window.syncPNFromVR(x.V);
+    updateTrends(x);
+    setTrend(trendW,trendDirs.W);setTrend(trendC,trendDirs.C);setTrend(trendX,trendDirs.X);setTrend(trendF,trendDirs.F);
+    if(finished){statusEl.innerHTML='<strong>All three stations tuned — keep exploring!</strong>';statusEl.style.color='var(--good)'}
+    else if(err<0.01){
+      statusEl.textContent='🎯 Hold steady…';statusEl.style.color='var(--good)';
+      if(missionStage==='tuning'){
+        if(stableTuneTimer===null || stableTuneRound!==round){
+          clearTimeout(stableTuneTimer);
+          stableTuneRound=round;
+          stableTuneTimer=setTimeout(()=>{
+            stableTuneTimer=null;
+            if(missionStage==='tuning' && stableTuneRound===round){
+              const now=calc();
+              const nowErr=Math.abs(now.f-now.target)/now.target;
+              if(nowErr<0.01){ stationLockSound(); showFoundState(); }
+            }
+          },STABLE_TUNE_MS);
+        }
+      }
+    }
+    else if(err<0.025){
+      if(stableTuneTimer!==null){clearTimeout(stableTuneTimer);stableTuneTimer=null;stableTuneRound=null;}
+      statusEl.textContent='Very close… fine-tune!';statusEl.style.color='var(--gold)'
+    }
+    else {statusEl.textContent=x.f<x.target?'Frequency too low → increase Vᵣ':'Frequency too high → decrease Vᵣ';statusEl.style.color='var(--bad)'}
+  }
+  const stationNames=['Music','News','Comedy'];
+  const stationEmojis=['🎵 💃','🤔 ✍️','👏 😂'];
+  function stationChoice(i){
+    const labels=["I'm feeling groovy today 🎵 💃",'I wonder whats the next best thing out there?','Time to put on MY SHOW!'];
+    return labels[i];
+  }
+  let currentLabPage=0;
+  function goToLabPage(page,instant=false){
+    currentLabPage=Math.max(0,Math.min(1,page));
+    const track=document.getElementById('labTrack');
+    if(track){
+      track.style.transform='translate3d('+(-currentLabPage*100)+'vw,0,0)';
+      const activePage=currentLabPage===0
+        ? document.getElementById('pnLabPage')
+        : track.querySelector('main');
+      if(activePage){
+        // Match the horizontal track's height to the page that is actually
+        // being shown. This prevents the taller second page from leaving a
+        // large empty area between the page-1 elevator and Live equations.
+        track.style.height=activePage.scrollHeight+'px';
+      }
+    }
+    document.querySelectorAll('.liftNeedleArm').forEach(arm=>{
+      arm.setAttribute('transform','rotate('+(currentLabPage===0?75:-75)+' 120 18)');
+    });
+    document.querySelectorAll('.liftStop').forEach(stop=>{
+      if(Number(stop.dataset.page)===currentLabPage)stop.setAttribute('aria-current','page');
+      else stop.removeAttribute('aria-current');
+    });
+    // Keep the document's horizontal scroll position at the true left edge.
+    // scrollIntoView() can otherwise horizontally scroll the transformed page
+    // itself, which makes the next/previous slide appear offset.
+    window.scrollTo({left:0,behavior:'auto'});
+    if(instant) window.scrollTo({top:0,left:0,behavior:'auto'});
+  }
+  function scrollToRadio(){
+    radioPowerClick(true);
+    goToLabPage(1);
+    setTimeout(()=>{
+      const game=document.querySelector('.game');
+      if(!game) return;
+      // Scroll vertically only; never let the browser pan horizontally to the
+      // transformed Page 2.
+      const top=game.getBoundingClientRect().top+window.scrollY;
+      window.scrollTo({top,left:0,behavior:'smooth'});
+    },80);
+  }
+  document.querySelectorAll('.liftStop').forEach(stop=>stop.addEventListener('click',()=>goToLabPage(Number(stop.dataset.page))));
+  requestAnimationFrame(()=>goToLabPage(currentLabPage,true));
+
+  // Mobile-friendly horizontal swipe navigation between the two lab pages.
+  const labViewport=document.getElementById('labViewport');
+  let swipeStartX=0,swipeStartY=0,swipeAllowed=false;
+  labViewport.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1)return;
+    const target=e.target;
+    swipeAllowed=!target.closest('button,a,input,select,textarea,.dial,.missionToast,.missionMini');
+    if(!swipeAllowed)return;
+    swipeStartX=e.touches[0].clientX;
+    swipeStartY=e.touches[0].clientY;
+  },{passive:true});
+  labViewport.addEventListener('touchend',e=>{
+    if(!swipeAllowed||!e.changedTouches.length)return;
+    swipeAllowed=false;
+    const dx=e.changedTouches[0].clientX-swipeStartX;
+    const dy=e.changedTouches[0].clientY-swipeStartY;
+    if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.25)return;
+    if(dx<0&&currentLabPage===0)goToLabPage(1);
+    else if(dx>0&&currentLabPage===1)goToLabPage(0);
+  },{passive:true});
+  labViewport.addEventListener('touchcancel',()=>{swipeAllowed=false;},{passive:true});
+
+  // Trackpad two-finger horizontal scrolling also changes between lab pages.
+  let trackpadSwipeDistance=0,trackpadSwipeLocked=false;
+  labViewport.addEventListener('wheel',e=>{
+    const target=e.target;
+    if(target.closest('button,a,input,select,textarea,.dial,.missionToast,.missionMini'))return;
+    let horizontalDelta=e.deltaX;
+    if(Math.abs(horizontalDelta)<1&&e.shiftKey)horizontalDelta=e.deltaY;
+    if(Math.abs(horizontalDelta)<1||Math.abs(horizontalDelta)<=Math.abs(e.deltaY)*1.15)return;
+    if(trackpadSwipeLocked)return;
+
+    trackpadSwipeDistance+=horizontalDelta;
+    if(Math.abs(trackpadSwipeDistance)<65)return;
+
+    const direction=trackpadSwipeDistance>0?1:-1;
+    trackpadSwipeDistance=0;
+    const nextPage=currentLabPage+direction;
+    if(nextPage>=0&&nextPage<=1){
+      e.preventDefault();
+      goToLabPage(nextPage);
+      trackpadSwipeLocked=true;
+      setTimeout(()=>{trackpadSwipeLocked=false;},550);
+    }
+  },{passive:false});
+  function minimizeMission(){missionToast.classList.add('hidden');missionMini.classList.remove('hidden');missionToast.onclick=null;}
+  function restoreMission(){
+    missionMini.classList.add('hidden');
+    missionToast.classList.remove('hidden');
+    if(missionStage==='start'){
+      missionToast.onclick=scrollToRadio;
+      if(currentLabPage!==1) setTimeout(()=>scrollToRadio(),0);
+    }
+  }
+  function startMissionFromAnywhere(){
+    if(missionStage==='start'){showChoices();scrollToRadio();}
+  }
+  function toast(title,body,options=[],tag='MISSION'){
+    missionMini.classList.add('hidden');
+    missionToast.classList.remove('hidden');
+    missionToast.classList.toggle('clickable',options.length===0 && (missionStage==='start'));
+    missionToast.innerHTML='<div class="toastTop"><div class="radioSpeaker" role="button" tabindex="0" aria-label="Minimize radio"><span class="radioAvatar">📻</span><span class="radioLabel">NTU RADIO</span></div></div><div class="toastTitle">'+title+'</div><div class="toastBody">'+body+'</div>'+(options.length?'<div class="missionOptions">'+options.map((o,i)=>'<button class="missionOption" data-choice="'+i+'">'+(typeof o==='string'?o:o.label)+'</button>').join('')+'</div>':'');
+    const radioSpeaker=missionToast.querySelector('.radioSpeaker');
+    radioSpeaker.addEventListener('click',e=>{e.stopPropagation();minimizeMission()});
+    radioSpeaker.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();minimizeMission()}});
+    missionToast.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();options[Number(btn.dataset.choice)].action()}));
+  }
+  function showStartTuning(){
+    missionStage='start';
+    toast('Start tuning?','Tap here when you are ready to choose your station.',[], 'MISSION');
+    missionToast.onclick=scrollToRadio;
+    missionToast.ondblclick=startMissionFromAnywhere;
+  }
+  missionMini.addEventListener('click',e=>{e.preventDefault(); restoreMission();});
+  missionMini.addEventListener('dblclick',e=>{e.preventDefault(); startMissionFromAnywhere();});
+  function showChoices(){
+    missionStage='choices';missionToast.onclick=null;
+    toast('Hmm...','Pick the kind of station you want to find.',[
+      {label:stationChoice(0),action:()=>chooseStation(0)},
+      {label:stationChoice(1),action:()=>chooseStation(1)},
+      {label:stationChoice(2),action:()=>chooseStation(2)}
+    ],'CHOOSE YOUR STATION');
+  }
+  function chooseStation(i){
+    clearTimeout(stableTuneTimer);
+    // Do NOT cut the current broadcast merely because the user picked another
+    // station. A real radio keeps the current signal until the knob actually
+    // moves away; the new station fades in only after its lock is reached.
+    pendingStationAudio=null; stableTuneTimer=null;stableTuneRound=null;
+    if(i===1){
+      newsNeedsRandomStart=true;
+      if(stationAudio[1] && Array.isArray(stationAudioData[1])){
+        newsTrackIndex=Math.floor(Math.random()*stationAudioData[1].length);
+        stationAudio[1].src=stationAudioData[1][newsTrackIndex];
+        try{ stationAudio[1].pause(); stationAudio[1].currentTime=0; }catch(_){}
+        newsNeedsRandomStart=false;
+        const np=stationAudio[1].play(); if(np&&np.catch)np.catch(()=>{});
+      }
+    }
+    selectedRound=i;round=i;missionStage='tuning';lastV=parseFloat(vr.value)||0;lastDirection=0;prevVals=null;trendDirs={W:0,C:0,X:0,F:0};
+    toast('Tuning to '+targets[i]+' MHz...','Use the knob to tune the radio until the signal locks.',[], 'TUNING');
+    missionToast.onclick=null;render();
+  }
+  function showFoundState(){
+    clearTimeout(stableTuneTimer);stableTuneTimer=null;stableTuneRound=null;
+    if(missionStage!=='tuning')return;
+    missionStage='found';
+    const i=selectedRound===null?round:selectedRound;
+    startStationAudio(i);
+    toast(stationEmojis[i],'',[], '');
+    setTimeout(()=>{
+      if(missionStage==='found')showStayExplore(i);
+    },5000);
+  }
+  function showStayExplore(current){
+    missionStage='stay';
+    const options=[
+      {label:'Stay '+stationEmojis[current],action:()=>stayOnStation(current)},
+      ...[0,1,2].filter(i=>i!==current).map(i=>({label:stationChoice(i),action:()=>chooseStation(i)})),
+      {label:'Leave',action:leaveMission}
+    ];
+    toast('Stay or explore more?','You can stay on this channel or tune into another one.',options, 'YOUR RADIO');
+    missionToast.querySelectorAll('.missionOption').forEach((btn,j)=>btn.textContent=options[j].label);
+  }
+  function stayOnStation(i){
+    clearTimeout(stableTuneTimer);stableTuneTimer=null;stableTuneRound=null;
+    selectedRound=i;round=i;missionStage='tuning';
+    keepStationAudio(i);
+    toast(stationNames[i]+' station','Stay on '+targets[i]+' MHz. You can keep exploring whenever you want.',[], 'STAYING');
+    missionToast.onclick=null;render();
+  }
+  function leaveMission(){
+    clearTimeout(stableTuneTimer);stableTuneTimer=null;stableTuneRound=null;
+    stopStationAudio();
+    radioPowerClick(false);
+    setAudioGain(radioNoiseGain,0); setAudioGain(tuningGain,0);
+    missionStage='left';missionToast.onclick=null;
+    toast('Radio off.','',[], 'MISSION ENDED');
+    clearTimeout(completionTimer);
+    completionTimer=setTimeout(()=>{if(missionStage==='left')showStartTuning()},30000);
+  }
+  function finish(){
+    running=true;finished=true;scoreText.textContent='3 / 3 locked';statusEl.innerHTML='<strong>All three stations tuned — keep exploring!</strong>';statusEl.style.color='var(--good)';
+    clearTimeout(completionTimer);missionStage='finished';
+    toast('All stations found!','You completed the full tuning mission. Nice work.',[], 'MISSION COMPLETE');
+  }
+  document.getElementById('start').addEventListener('click',()=>{overlay.style.display='none';goToLabPage(0,true);running=true;render();showStartTuning()});
+  vr.addEventListener('input',()=>{const now=parseFloat(vr.value);if(now>lastV)lastDirection=1;else if(now<lastV)lastDirection=-1;lastV=now;ensureAudio();tuningMoveSound();render();});
+  let dialDrag=false,lastPointerAngle=null;
+  function pointerAngle(clientX,clientY){
+    const r=dial.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    return Math.atan2(clientY-cy,clientX-cx)*180/Math.PI;
+  }
+  function setFromDialDelta(clientX,clientY){
+    const angle=pointerAngle(clientX,clientY);
+    if(lastPointerAngle===null){lastPointerAngle=angle;return;}
+    let delta=angle-lastPointerAngle;
+    // Unwrap the angle so crossing the -180°/180° boundary never freezes the knob.
+    if(delta>180)delta-=360;
+    if(delta<-180)delta+=360;
+    lastPointerAngle=angle;
+    const current=parseFloat(vr.value)||0;
+    const next=Math.max(0,Math.min(15,current+delta*(15/270)));
+    vr.value=next.toFixed(2);
+    if(next>lastV)lastDirection=1;else if(next<lastV)lastDirection=-1;
+    lastV=next;ensureAudio();tuningMoveSound();render();
+  }
+  function endDialDrag(){
+    dialDrag=false;lastPointerAngle=null;
+    dial.classList.remove('dragging');
+  }
+  dial.addEventListener('pointerdown',e=>{
+    e.preventDefault();dialDrag=true;lastPointerAngle=pointerAngle(e.clientX,e.clientY);
+    dial.classList.add('dragging');
+    try{dial.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  dial.addEventListener('pointermove',e=>{if(dialDrag)setFromDialDelta(e.clientX,e.clientY)});
+  dial.addEventListener('pointerup',endDialDrag);
+  dial.addEventListener('pointercancel',endDialDrag);
+  dial.addEventListener('lostpointercapture',endDialDrag);
+  frequencySlider.addEventListener('input',()=>{
+    const wanted=parseFloat(frequencySlider.value);
+    let lo=0,hi=15;
+    for(let i=0;i<45;i++){
+      const mid=(lo+hi)/2;
+      const old=vr.value;vr.value=mid;
+      const f=calc().f;
+      if(f<wanted)lo=mid;else hi=mid;
+      vr.value=old;
+    }
+    const v=(lo+hi)/2;
+    vr.value=v.toFixed(2);
+    if(v>lastV)lastDirection=1;else if(v<lastV)lastDirection=-1;
+    lastV=v;ensureAudio();tuningMoveSound();render();
+  });
+  dial.addEventListener('keydown',e=>{let v=parseFloat(vr.value);if(e.key==='ArrowUp'||e.key==='ArrowRight')v+=.25;else if(e.key==='ArrowDown'||e.key==='ArrowLeft')v-=.25;else return;e.preventDefault();v=Math.max(0,Math.min(15,v));vr.value=v.toFixed(2);lastDirection=v>lastV?1:-1;lastV=v;render();});
+  document.getElementById('lock').addEventListener('click',()=>{
+    if(!running)return;const x=calc(),err=Math.abs(x.f-x.target)/x.target;
+    if(err<0.01){
+      if(missionStage==='tuning'){
+        if(!window.lockedStations)window.lockedStations=new Set();
+        window.lockedStations.add(selectedRound===null?round:selectedRound);
+        score=window.lockedStations.size;scoreText.textContent=score+' / 3 locked';
+        if(score>=3)finish(); else showFoundState();
+      }
+    }else{statusEl.textContent='Not locked — get closer to the target.';statusEl.style.color='var(--bad)'}
+  });
+  vr.value=stageStartVR[0];lastV=parseFloat(vr.value);lastDirection=0;prevVals=null;trendDirs={W:0,C:0,X:0,F:0};render();
+})();
+</script>
+
+<script>
+(() => {
+  const master=document.getElementById('pnMaster'), slider=document.getElementById('pnVRSlider'), valueEl=document.getElementById('pnVRValue');
+  const boundary=document.getElementById('pnBoundary'), diagram=document.getElementById('pnDiagram'), canvas=document.getElementById('pnGraph');
+  const graphV=document.getElementById('pnGraphV'), graphF=document.getElementById('pnGraphF'), warning=document.getElementById('pnBreakdown');
+  const existingVR=document.getElementById('vr');
+  if(!master||!slider||!existingVR)return;
+  const eps=11.8*8.854e-12,q=1.602e-19,N=1e22,Vbi=.70,A=1e-8,L=1e-6,breakdown=14;
+  const calcF=V=>1/(2*Math.PI*Math.sqrt(L*(eps*A/Math.sqrt(2*eps*(Vbi+V)/(q*N)))))/1e6;
+  const particles=[];
+  function makeParticles(){
+    for(let i=0;i<12;i++){const el=document.createElement('span');el.className='pnParticle electron';diagram.appendChild(el);particles.push({el,type:'e',i});}
+    for(let i=0;i<12;i++){const el=document.createElement('span');el.className='pnParticle hole';diagram.appendChild(el);particles.push({el,type:'h',i});}
+    particles.forEach((p,i)=>p.el.style.setProperty('--pn-delay',(-i*240)+'ms'));
+    const ions=[];for(let i=0;i<7;i++){const el=document.createElement('span');el.className='pnIon '+(i%2?'neg':'');el.textContent=i%2?'−':'+';diagram.appendChild(el);ions.push(el);} return ions;
+  }
+  const ions=makeParticles();
+  function setParticleState(V,on){
+    const rect=diagram.getBoundingClientRect();
+    const depPct=Math.min(.46,.16+.30*(V/15));
+    boundary.style.width=(depPct*100)+'%';
+    const leftEdge=(.5-depPct/2)*100,rightEdge=(.5+depPct/2)*100;
+    particles.forEach((p,idx)=>{
+      const side=p.type==='h'?-1:1;
+      let x,y;
+      if(!on){
+        x=50+side*(2+((idx*17)%19));
+        y=34+((idx*29)%34);
+      }else{
+        const edge=p.type==='h'?leftEdge:rightEdge;
+        const outer=p.type==='h'?10+((idx*7)%18):72+((idx*11)%18);
+        const travel=(V/15);
+        x=edge+(outer-edge)*travel;
+        y=28+((idx*31)%43);
+      }
+      p.el.style.left=x+'%';p.el.style.top=y+'%';p.el.style.transform='translate(-50%,-50%)';p.el.style.opacity='1';
+    });
+    ions.forEach((el,i)=>{const x=leftEdge+(rightEdge-leftEdge)*((i+1)/(ions.length+1));el.style.left=x+'%';el.style.top=(36+((i*19)%28))+'%';});
+  }
+  function drawGraph(V){
+    const dpr=window.devicePixelRatio||1, r=canvas.getBoundingClientRect(); if(r.width<10||r.height<10)return;
+    canvas.width=r.width*dpr;canvas.height=r.height*dpr;const c=canvas.getContext('2d');c.scale(dpr,dpr);const w=r.width,h=r.height;
+    c.fillStyle='#111414';c.fillRect(0,0,w,h);
+    const pad={l:48,r:18,t:18,b:36},gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+    const f0=calcF(0), f14=calcF(14), f15=calcF(15); const yMax=Math.max(190,f15*1.1); const yMin=0;
+    const xMap=x=>pad.l+(x/15)*gw,yMap=y=>pad.t+(1-(y-yMin)/(yMax-yMin))*gh;
+    c.strokeStyle='#554936';c.lineWidth=1;c.font='10px monospace';c.fillStyle='#9f967f';
+    for(let x=0;x<=15;x+=3){const px=xMap(x);c.beginPath();c.moveTo(px,pad.t);c.lineTo(px,h-pad.b);c.stroke();c.fillText(x+'V',px-7,h-12)}
+    for(let y=0;y<=180;y+=30){const py=yMap(y);c.beginPath();c.moveTo(pad.l,py);c.lineTo(w-pad.r,py);c.stroke();c.fillText(y,7,py+3)}
+    c.strokeStyle='#9d8a61';c.lineWidth=1.2;c.beginPath();c.moveTo(pad.l,pad.t);c.lineTo(pad.l,h-pad.b);c.lineTo(w-pad.r,h-pad.b);c.stroke();
+    c.fillStyle='#c4b89f';c.font='11px monospace';c.fillText('f₀ (MHz)',8,13);c.fillText('Vᵣ',w-27,h-12);
+    c.save();c.setLineDash([6,5]);c.strokeStyle='#d45843';c.lineWidth=1.5;c.beginPath();c.moveTo(xMap(breakdown),pad.t);c.lineTo(xMap(breakdown),h-pad.b);c.stroke();c.restore();c.fillStyle='#e17d69';c.font='10px monospace';c.fillText('BREAKDOWN 14V',xMap(breakdown)-67,pad.t+11);
+    c.beginPath();c.strokeStyle='#f2c56f';c.lineWidth=2.5;c.shadowBlur=10;c.shadowColor='#f2c56f';
+    for(let i=0;i<=180;i++){const x=i/12.0; if(x>breakdown)break;const px=xMap(x),py=yMap(calcF(x));if(i===0)c.moveTo(px,py);else c.lineTo(px,py);}c.stroke();c.shadowBlur=0;
+    if(V<=breakdown){const px=xMap(V),py=yMap(calcF(V));c.beginPath();c.fillStyle='#fff1b5';c.shadowBlur=18;c.shadowColor='#4de6ff';c.arc(px,py,6,0,Math.PI*2);c.fill();c.shadowBlur=0;c.strokeStyle='#f2c56f';c.stroke();}
+    else{const px=xMap(Math.min(V,15)),py=yMap(0);c.beginPath();c.fillStyle='#ff765d';c.shadowBlur=18;c.shadowColor='#ff5d45';c.arc(px,py,6,0,Math.PI*2);c.fill();c.shadowBlur=0;}
+    graphV.textContent=V.toFixed(2)+' V';graphF.textContent=V<=breakdown?calcF(V).toFixed(1)+' MHz':'collapsed';warning.classList.toggle('active',V>breakdown);
+  }
+  function sync(V){valueEl.textContent=V.toFixed(2)+' V';graphV.textContent=V.toFixed(2)+' V';setParticleState(V,master.checked);drawGraph(V);}
+  // Public bridge used by the Page 2 knob so the Page 1 diagram and graph
+  // follow the exact same reverse-voltage state without creating an event loop.
+  window.syncPNFromVR=function(V){
+    V=Math.max(0,Math.min(15,Number(V)||0));
+    slider.value=V.toFixed(2);
+    sync(V);
+  };
+  function setVR(V){V=Math.max(0,Math.min(15,V));slider.value=V.toFixed(2);existingVR.value=V.toFixed(2);existingVR.dispatchEvent(new Event('input',{bubbles:true}));sync(V);}
+  slider.addEventListener('input',()=>setVR(parseFloat(slider.value)||0));
+  master.addEventListener('change',()=>{if(master.checked){slider.disabled=false;setVR(parseFloat(slider.value)||0);}else{slider.disabled=true;setVR(0);}});
+  const observer=()=>{if(document.activeElement!==slider){const V=parseFloat(existingVR.value)||0;slider.value=V.toFixed(2);sync(V);}};
+  existingVR.addEventListener('input',observer);
+  window.addEventListener('resize',()=>drawGraph(parseFloat(slider.value)||0));
+  setVR(parseFloat(existingVR.value)||14);master.checked=true;slider.disabled=false;
+})();
+</script>
+</body>
+</html>
